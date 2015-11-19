@@ -1,1 +1,1 @@
-Remote compression tool
+Remote compression tool written in C++/C#
