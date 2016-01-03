@@ -24,11 +24,11 @@ int on = 1;
 
 void* threadFunction(void* info)
 {
-  struct threadInfo* _info = (struct threadInfo*)info;
+  struct threadInfo* _info = (threadInfo*)info;
   char buffer[1024];
   int messageSize = read(_info->connection_fd, &buffer, sizeof(&buffer));
 
-  printf("Connection from: %s\n", inet_ntoa((struct in_addr)_info->connectionAddress.sin_addr));
+  printf("Connection from: %s\n", inet_ntoa((in_addr)_info->connectionAddress.sin_addr));
 
   if(strncmp("117270",buffer,6) == 0)
   {
@@ -47,9 +47,9 @@ void* threadFunction(void* info)
 }
 
 
-struct sockaddr_in FillAddress(int portNumber)
+sockaddr_in FillAddress(int portNumber)
 {
-  struct sockaddr_in socketAddress;
+  sockaddr_in socketAddress;
 
   socketAddress.sin_family = AF_INET;
   socketAddress.sin_port = htons(portNumber);
@@ -62,11 +62,11 @@ int main(int argc, char** argv)
 {
   int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
   setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, (char*)&on, sizeof(on));
+	
+  sockaddr_in connectionAddress;
+  sockaddr_in socketAddress = FillAddress(1234);
 
-  struct sockaddr_in connectionAddress;
-  struct sockaddr_in socketAddress = FillAddress(1234);
-
-  bind(socket_fd, (struct sockaddr*)&socketAddress, sizeof(socketAddress));
+  bind(socket_fd, (sockaddr*)&socketAddress, sizeof(socketAddress));
 
   listen(socket_fd, backlog);
 
@@ -74,10 +74,10 @@ int main(int argc, char** argv)
   {
     pthread_t threadId;
 
-    struct threadInfo* info = (struct threadInfo*)malloc(sizeof(struct threadInfo));
+    threadInfo* info = new threadInfo;
 
     socklen_t socketAddressSize = sizeof(info->connectionAddress);
-    info->connection_fd = accept(socket_fd, (struct sockaddr*)&info->connectionAddress, &socketAddressSize);
+    info->connection_fd = accept(socket_fd, (sockaddr*)&info->connectionAddress, &socketAddressSize);
 
     pthread_create(&threadId, NULL, threadFunction, info);
     pthread_detach(threadId);
