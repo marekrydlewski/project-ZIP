@@ -74,7 +74,7 @@ int main(int argc, char** argv)
   {
     pthread_t threadId;
 
-    threadInfo* info = new threadInfo;
+    threadInfo* info = new threadInfo();
 
     socklen_t socketAddressSize = sizeof(info->connectionAddress);
     info->connection_fd = accept(socket_fd, (sockaddr*)&info->connectionAddress, &socketAddressSize);
