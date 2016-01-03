@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <pthread.h>
 
 struct threadInfo
 {
@@ -16,8 +17,8 @@ struct threadInfo
 };
 
 int backlog = 5;
-char* responseValid = "Marcin Jablonski\n";
-char* responseInvalid = "Unknown\n";
+const char* responseValid = "Marcin Jablonski\n";
+const char* responseInvalid = "Unknown\n";
 int responseSize;
 int on = 1;
 
@@ -73,9 +74,9 @@ int main(int argc, char** argv)
   {
     pthread_t threadId;
 
-    struct threadInfo* info = malloc(sizeof(struct threadInfo));
+    struct threadInfo* info = (struct threadInfo*)malloc(sizeof(struct threadInfo));
 
-    int socketAddressSize = sizeof(info->connectionAddress);
+    socklen_t socketAddressSize = sizeof(info->connectionAddress);
     info->connection_fd = accept(socket_fd, (struct sockaddr*)&info->connectionAddress, &socketAddressSize);
 
     pthread_create(&threadId, NULL, threadFunction, info);
