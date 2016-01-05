@@ -1,1 +1,10 @@
 C:\Projekty\project-ZIP\project-ZIP.client\project-ZIP.client\bin\Debug\project-ZIP.client.exe.config
+C:\Users\Marek\Documents\school\project-ZIP\project-ZIP.client\project-ZIP.client\bin\Debug\project-ZIP.client.exe.config
+C:\Users\Marek\Documents\school\project-ZIP\project-ZIP.client\project-ZIP.client\bin\Debug\project-ZIP.client.exe
+C:\Users\Marek\Documents\school\project-ZIP\project-ZIP.client\project-ZIP.client\bin\Debug\project-ZIP.client.pdb
+C:\Users\Marek\Documents\school\project-ZIP\project-ZIP.client\project-ZIP.client\obj\Debug\project-ZIP.client.csprojResolveAssemblyReference.cache
+C:\Users\Marek\Documents\school\project-ZIP\project-ZIP.client\project-ZIP.client\obj\Debug\project_ZIP.client.ProjectZip.resources
+C:\Users\Marek\Documents\school\project-ZIP\project-ZIP.client\project-ZIP.client\obj\Debug\project_ZIP.client.Properties.Resources.resources
+C:\Users\Marek\Documents\school\project-ZIP\project-ZIP.client\project-ZIP.client\obj\Debug\project-ZIP.client.csproj.GenerateResource.Cache
+C:\Users\Marek\Documents\school\project-ZIP\project-ZIP.client\project-ZIP.client\obj\Debug\project-ZIP.client.exe
+C:\Users\Marek\Documents\school\project-ZIP\project-ZIP.client\project-ZIP.client\obj\Debug\project-ZIP.client.pdb
