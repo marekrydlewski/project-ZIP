@@ -9,80 +9,89 @@
 #include <unistd.h>
 #include <string.h>
 #include <pthread.h>
-
-struct threadInfo
-{
-  int connection_fd;
-  struct sockaddr_in connectionAddress;
-};
+#include <iostream>
 
 int backlog = 5;
-const char* responseValid = "Marcin Jablonski\n";
-const char* responseInvalid = "Unknown\n";
+const char *responseValid = "Marcin Jablonski\n";
+const char *responseInvalid = "Unknown\n";
 int responseSize;
 int on = 1;
+int socket_fd;
 
-void* threadFunction(void* info)
-{
-  struct threadInfo* _info = (threadInfo*)info;
-  char buffer[1024];
-  int messageSize = read(_info->connection_fd, &buffer, sizeof(&buffer));
+void *threadFunction(void *info);
 
-  printf("Connection from: %s\n", inet_ntoa((in_addr)_info->connectionAddress.sin_addr));
+struct sockaddr_in FillAddress(int portNumber);
 
-  if(strncmp("117270",buffer,6) == 0)
-  {
-    responseSize = 17;
-    write(_info->connection_fd, responseValid, responseSize);
-  }
-  else
-  {
-    responseSize = sizeof(responseInvalid);
-    write(_info->connection_fd, responseInvalid, responseSize);
-  }
-  write(1, "Ending connection\n", 18);
-  close(_info->connection_fd);
-  free(_info);
-  return 0;
+struct threadInfo {
+    int connection_fd;
+    struct sockaddr_in connectionAddress;
+};
+
+
+void *threadFunction(void *info) {
+    struct threadInfo *_info = (threadInfo *) info;
+    char buffer[1024];
+    int messageSize = (int) read(_info->connection_fd, &buffer, sizeof(&buffer));
+
+    printf("Connection from: %s\n", inet_ntoa(_info->connectionAddress.sin_addr));
+
+    if (strncmp("117270", buffer, 6) == 0) {
+        responseSize = 17;
+        write(_info->connection_fd, responseValid, (size_t) responseSize);
+    }
+    else {
+        responseSize = sizeof(responseInvalid);
+        write(_info->connection_fd, responseInvalid, (size_t) responseSize);
+    }
+    write(1, "Ending connection\n", 18);
+    close(_info->connection_fd);
+    free(_info);
+    return 0;
 }
 
 
-sockaddr_in FillAddress(int portNumber)
-{
-  sockaddr_in socketAddress;
+struct sockaddr_in FillAddress(int portNumber) {
+    struct sockaddr_in socketAddress;
 
-  socketAddress.sin_family = AF_INET;
-  socketAddress.sin_port = htons(portNumber);
-  socketAddress.sin_addr.s_addr = INADDR_ANY;
+    socketAddress.sin_family = AF_INET;
+    socketAddress.sin_port = htons((uint16_t) portNumber);
+    socketAddress.sin_addr.s_addr = INADDR_ANY;
 
-  return socketAddress;
+    return socketAddress;
 }
 
-int main(int argc, char** argv)
+int sighandler(int);
+
+
+int main(int argc, char **argv) {
+    socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on));
+
+    struct sockaddr_in socketAddress = FillAddress(1234);
+
+    bind(socket_fd, (struct sockaddr *) &socketAddress, sizeof(socketAddress));
+
+    listen(socket_fd, backlog);
+
+    while (1) {
+        pthread_t threadId;
+
+        struct threadInfo *info = (struct threadInfo *) malloc(sizeof(struct threadInfo));
+
+        socklen_t socketAddressSize = sizeof(info->connectionAddress);
+        info->connection_fd = accept(socket_fd, (struct sockaddr *) &info->connectionAddress, &socketAddressSize);
+
+        pthread_create(&threadId, NULL, threadFunction, info);
+        pthread_detach(threadId);
+    }
+}
+
+
+int sighandler(int signal)
 {
-  int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-  setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, (char*)&on, sizeof(on));
-	
-  sockaddr_in connectionAddress;
-  sockaddr_in socketAddress = FillAddress(1234);
-
-  bind(socket_fd, (sockaddr*)&socketAddress, sizeof(socketAddress));
-
-  listen(socket_fd, backlog);
-
-  while(1)
-  {
-    pthread_t threadId;
-
-    threadInfo* info = new threadInfo();
-
-    socklen_t socketAddressSize = sizeof(info->connectionAddress);
-    info->connection_fd = accept(socket_fd, (sockaddr*)&info->connectionAddress, &socketAddressSize);
-
-    pthread_create(&threadId, NULL, threadFunction, info);
-    pthread_detach(threadId);
-  }
-
-  close(socket_fd);
-  return 0;
+    if (signal == SIGINT) {
+        close(socket_fd);
+        std::cout<<"Caught signal "<<signal<<" , coming out...\n"<<std::endl;
+        return 0;
+    }
 }
