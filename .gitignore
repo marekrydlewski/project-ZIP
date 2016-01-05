@@ -27,6 +27,8 @@
 *.out
 *.app
 
+# Solution User Options
+*.suo
 
 # Folders
 bin/

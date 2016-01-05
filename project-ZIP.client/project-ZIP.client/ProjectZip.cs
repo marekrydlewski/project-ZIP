@@ -147,7 +147,21 @@ namespace project_ZIP.client
         {
             if (IPTextBox.Text.Length > 0)
             {
-                Dns.BeginGetHostEntry(IPTextBox.Text.ToString(), GetHostEntryCallback, null);
+                IPAddress[] addresses = null;
+                Socket socketFd = null;
+                IPEndPoint endPoint = null;
+
+                //Dns.BeginGetHostEntry(IPTextBox.Text.ToString(), GetHostEntryCallback, null);
+
+                socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                endPoint = new IPEndPoint(IPAddress.Parse(IPTextBox.Text.ToString()), Int32.Parse(PORT_NO));
+
+                setLabel("Wait! Connecting...");
+                setIPTextBox("");
+
+                /* connect to the server */
+                socketFd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback), socketFd);
             }
             else
             {
