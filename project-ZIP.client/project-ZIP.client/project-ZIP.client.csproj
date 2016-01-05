@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SocketStateObject.cs" />
     <EmbeddedResource Include="ProjectZip.resx">
       <DependentUpon>ProjectZip.cs</DependentUpon>
     </EmbeddedResource>
