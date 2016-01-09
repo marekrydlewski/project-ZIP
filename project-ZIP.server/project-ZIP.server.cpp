@@ -3,8 +3,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include <signal.h>
-#include <stdio.h>
+#include <csignal>
+#include <cstdio>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -31,7 +31,7 @@ struct threadInfo {
 void *threadFunction(void *info) {
     struct threadInfo *_info = (threadInfo *) info;
     char buffer[1024];
-    int messageSize = (int) read(_info->connection_fd, &buffer, sizeof(&buffer));
+    //int messageSize = (int) read(_info->connection_fd, &buffer, sizeof(&buffer));
 
     printf("Connection from: %s\n", inet_ntoa(_info->connectionAddress.sin_addr));
 
@@ -60,7 +60,7 @@ struct sockaddr_in FillAddress(int portNumber) {
     return socketAddress;
 }
 
-int sighandler(int);
+void sighandler(int);
 
 
 int main(int argc, char **argv) {
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
     bind(socket_fd, (struct sockaddr *) &socketAddress, sizeof(socketAddress));
 
     listen(socket_fd, backlog);
-
+    signal(SIGINT, sighandler);
     while (1) {
         pthread_t threadId;
 
@@ -87,11 +87,9 @@ int main(int argc, char **argv) {
 }
 
 
-int sighandler(int signal)
+void sighandler(int signal)
 {
-    if (signal == SIGINT) {
-        close(socket_fd);
-        std::cout<<"Caught signal "<<signal<<" , coming out...\n"<<std::endl;
-        return 0;
-    }
+    close(socket_fd);
+    std::cout<<"Caught signal "<<signal<<" , coming out...\n"<<std::endl;
+    exit(0);
 }
