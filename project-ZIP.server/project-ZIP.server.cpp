@@ -13,16 +13,21 @@
 
 
 //declarations
-struct threadInfo;
 void sighandler(int);
 sockaddr_in FillAddress(int portNumber);
 void *threadFunction(void *info);
+int socket_fd;
 //
+
+struct threadInfo {
+	int connection_fd;
+	sockaddr_in connectionAddress;
+};
 
 int main(int argc, char **argv) {
 	int backlog = 5;
 	int on = 1;
-    int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
     setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on));
     sockaddr_in socketAddress = FillAddress(1234);
@@ -34,7 +39,7 @@ int main(int argc, char **argv) {
 
     while (1) {
         pthread_t threadId;
-		auto *info = new threadInfo());
+				auto *info = new threadInfo();
 
         socklen_t socketAddressSize = sizeof(info->connectionAddress);
         info->connection_fd = accept(socket_fd, (sockaddr*) &info->connectionAddress, &socketAddressSize);
@@ -47,10 +52,7 @@ int main(int argc, char **argv) {
 
 //definitions, move to new files later
 
-struct threadInfo {
-	int connection_fd;
-	sockaddr_in connectionAddress;
-};
+
 
 void sighandler(int signal)
 {
