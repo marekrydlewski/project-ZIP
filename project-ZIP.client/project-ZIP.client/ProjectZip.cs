@@ -168,5 +168,13 @@ namespace project_ZIP.client
                 setLabel("IP address empty");
             }
         }
+
+        private void FileSelectButton_Click(object sender, EventArgs e)
+        {
+            if (FileSelectDialog.ShowDialog() == DialogResult.OK)
+            {
+                FileSelectTextBox.Text = FileSelectDialog.SelectedPath;
+            }
+        }
     }
 }

@@ -28,22 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
             this.IPTextBox = new System.Windows.Forms.TextBox();
             this.IPLabel = new System.Windows.Forms.Label();
             this.CompressButton = new System.Windows.Forms.Button();
+            this.FileSelectButton = new System.Windows.Forms.Button();
+            this.FileSelectTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.FileSelectDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label1.Location = new System.Drawing.Point(96, 117);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 31);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "ZIP IT";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // IPTextBox
             // 
@@ -63,7 +55,7 @@
             // 
             // CompressButton
             // 
-            this.CompressButton.Location = new System.Drawing.Point(102, 206);
+            this.CompressButton.Location = new System.Drawing.Point(100, 89);
             this.CompressButton.Name = "CompressButton";
             this.CompressButton.Size = new System.Drawing.Size(75, 23);
             this.CompressButton.TabIndex = 3;
@@ -71,15 +63,43 @@
             this.CompressButton.UseVisualStyleBackColor = true;
             this.CompressButton.Click += new System.EventHandler(this.CompressButton_Click);
             // 
+            // FileSelectButton
+            // 
+            this.FileSelectButton.Location = new System.Drawing.Point(197, 63);
+            this.FileSelectButton.Name = "FileSelectButton";
+            this.FileSelectButton.Size = new System.Drawing.Size(75, 23);
+            this.FileSelectButton.TabIndex = 4;
+            this.FileSelectButton.Text = "Select...";
+            this.FileSelectButton.UseVisualStyleBackColor = true;
+            this.FileSelectButton.Click += new System.EventHandler(this.FileSelectButton_Click);
+            // 
+            // FileSelectTextBox
+            // 
+            this.FileSelectTextBox.Location = new System.Drawing.Point(16, 63);
+            this.FileSelectTextBox.Name = "FileSelectTextBox";
+            this.FileSelectTextBox.Size = new System.Drawing.Size(175, 20);
+            this.FileSelectTextBox.TabIndex = 5;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 47);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(175, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Select folder you want to compress:";
+            // 
             // ProjectZip
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(284, 124);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.FileSelectTextBox);
+            this.Controls.Add(this.FileSelectButton);
             this.Controls.Add(this.CompressButton);
             this.Controls.Add(this.IPLabel);
             this.Controls.Add(this.IPTextBox);
-            this.Controls.Add(this.label1);
             this.Name = "ProjectZip";
             this.Text = "Project ZIP";
             this.ResumeLayout(false);
@@ -89,10 +109,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox IPTextBox;
         private System.Windows.Forms.Label IPLabel;
         private System.Windows.Forms.Button CompressButton;
+        private System.Windows.Forms.Button FileSelectButton;
+        private System.Windows.Forms.TextBox FileSelectTextBox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.FolderBrowserDialog FileSelectDialog;
     }
 }
 
