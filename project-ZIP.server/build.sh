@@ -1,3 +1,3 @@
 #!/bin/bash
 cd ${0%/*}
-g++ ./project-ZIP.server.cpp -pthread -o ./server -Wall
+g++ -std=c++11 ./project-ZIP.server.cpp -pthread -o ./server -Wall
