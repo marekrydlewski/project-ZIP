@@ -15,7 +15,13 @@ namespace project_ZIP.client
 
         public static SendFileStatus SendFile(string path)
         {
+
             return SendFileStatus.OK;
+        }
+
+        private void SendFileCallback(IAsyncResult ar)
+        {
+            
         }
     }
 }

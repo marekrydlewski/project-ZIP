@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
@@ -11,9 +12,11 @@ namespace project_ZIP.client
             OK, ERROR
         }
 
-        public static SendDirectoryStatus SendDirectory(string path, out Dictionary<string, string> newFileMap, Dictionary<string, string> fileMap = null, string parentDirectory = "")
+        public static SendDirectoryStatus SendDirectory(string path, Collection<string> fileMap = null, string parentDirectory = "")
         {
-            if (fileMap == null) fileMap = new Dictionary<string, string>();
+            bool entryPoint = (fileMap == null ? true : false);
+
+            if (fileMap == null) fileMap = new Collection<string>();
 
             string dirName = Path.Combine(parentDirectory, Path.GetFileName(path));
 
@@ -24,22 +27,19 @@ namespace project_ZIP.client
 
             foreach (var fileName in files)
             {
-                fileMap.Add(Path.Combine(dirName, Path.GetFileName(fileName)), dirName);
+                fileMap.Add(Path.Combine(dirName, Path.GetFileName(fileName)));
             }
 
             foreach (var subdirectoryPath in subdirectories)
             {
-                if (SendDirectory(subdirectoryPath, out newFileMap, fileMap, dirName) == SendDirectoryStatus.OK)
+                if (SendDirectory(subdirectoryPath, fileMap, dirName) == SendDirectoryStatus.ERROR)
                 {
-                    fileMap = newFileMap;
-                }
-                else
-                {
-                    newFileMap = null;
                     return SendDirectoryStatus.ERROR;
                 }
             }
-            newFileMap = fileMap;
+
+            //if entryPoint send filemap
+
             return SendDirectoryStatus.OK;
         }
     }
