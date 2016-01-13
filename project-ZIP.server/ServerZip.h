@@ -39,6 +39,8 @@ private:
     ServerZip(ServerZip const&){};             // copy constructor is private
     //ServerZip & operator=(ServerZip const&){};  // assignment operator is private
     static ServerZip * m_pInstance;
+    static void readXBytes(int socket, unsigned int x, void* buffer);
+    static std::string readData(int socket_fd);
 };
 
 

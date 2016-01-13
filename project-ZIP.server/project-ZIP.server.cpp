@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
 	///test
 	ServerZip* server;
 	server = ServerZip::getInstance();
-	signal(SIGINT, server->signalHandler);
+
 	try {
 		ZipArchive archive{"mydata.zip"};
 		ZipStat stat = archive.stat("README");

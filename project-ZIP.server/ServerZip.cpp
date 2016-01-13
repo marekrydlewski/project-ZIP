@@ -26,6 +26,8 @@ ServerZip *ServerZip::getInstance() {
 
 void ServerZip::connect() {
     int on = 1;
+    signal(SIGINT, this->signalHandler);
+
     socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
     setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on));
@@ -34,7 +36,7 @@ void ServerZip::connect() {
     bind(socket_fd, (sockaddr *) &socketAddress, sizeof(socketAddress));
 
     listen(socket_fd, backlog);
-    signal(SIGINT, this->signalHandler);
+
 
     while (1) {
         pthread_t threadId;
@@ -50,23 +52,19 @@ void ServerZip::connect() {
 
 void *ServerZip::threadFunction(void *info) {
 
-    const char *responseValid = "Marcin Jablonski\n";
     const char *responseInvalid = "Unknown\n";
     int responseSize;
-    threadInfo *_info = (threadInfo *) info;
-    char buffer[1024];
-    //int messageSize = (int) read(_info->connection_fd, &buffer, sizeof(&buffer));
 
+    threadInfo *_info = (threadInfo *) info;
+
+    auto path = readData(_info->connection_fd);
+    auto file = readData(_info->connection_fd);
+
+    std::cout<<path<<std::endl;
     printf("Connection from: %s\n", inet_ntoa(_info->connectionAddress.sin_addr));
 
-    if (strncmp("117270", buffer, 6) == 0) {
-        responseSize = 17;
-        write(_info->connection_fd, responseValid, (size_t) responseSize);
-    }
-    else {
-        responseSize = sizeof(responseInvalid);
-        write(_info->connection_fd, responseInvalid, (size_t) responseSize);
-    }
+    responseSize = sizeof(responseInvalid);
+    write(_info->connection_fd, responseInvalid, (size_t) responseSize);
     write(1, "Ending connection\n", 18);
     close(_info->connection_fd);
     free(_info);
@@ -83,3 +81,40 @@ sockaddr_in ServerZip::fillAddress(int portNumber) {
     return socketAddress;
 }
 
+
+void ServerZip::readXBytes(int socket, unsigned int x, void* buffer)
+{
+    unsigned int bytesRead = 0;
+    int result;
+    while (bytesRead < x)
+    {
+        result = read(socket, buffer + bytesRead, x - bytesRead);
+        if (result < 1 )
+        {
+            // Throw error
+            std::cout<<"Oh no problem with reading data!"<<std::endl;
+        }
+
+        bytesRead += result;
+    }
+}
+
+std::string ServerZip::readData(int socket_fd) {
+    unsigned int length = 0;
+    char* buffer = 0;
+// we assume that sizeof(length) will return 4 here.
+    readXBytes(socket_fd, sizeof(length), (void*)(&length));
+    buffer = new char[length];
+    readXBytes(socket_fd, length, (void*)buffer);
+
+    std::string str = "";
+
+    if (buffer)
+        str = std::string(buffer);
+    else {
+        //throw error
+    }
+
+    delete [] buffer;
+    return str;
+}
