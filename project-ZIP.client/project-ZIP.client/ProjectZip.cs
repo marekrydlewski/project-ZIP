@@ -172,10 +172,9 @@ namespace project_ZIP.client
 
         public void DownloadFile(byte[] fileBytes)
         {
-            Stream myStream;
             if (FileSaveDialog.ShowDialog() == DialogResult.OK)
             {
-                myStream = FileSaveDialog.OpenFile();
+                var myStream = FileSaveDialog.OpenFile();
                 myStream.Write(fileBytes, 0, fileBytes.Length);
                 myStream.Close();
             }

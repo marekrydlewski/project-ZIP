@@ -15,7 +15,9 @@ namespace project_ZIP.client
         public static FileReceiveStatus FileReceive(Socket socketFd)
         {
             //receive File size
-            int size = 0;
+            byte[] sizeBytes = new byte[sizeof(int)];
+            socketFd.Receive(sizeBytes, sizeBytes.Length, 0);
+            int size = BitConverter.ToInt32(sizeBytes, 0);
             //receive File
             FileAndSize fas = new FileAndSize
             {
@@ -26,18 +28,6 @@ namespace project_ZIP.client
             socketFd.BeginReceive(fas.Buffer, 0, FileAndSize.BUF_SIZE, 0,  new AsyncCallback(FileReceiveCallback), fas);
 
             return FileReceiveStatus.OK;
-        }
-
-        private int getSize()
-        {
-            return 0;
-        }
-
-        private void SizeReceiveCallback(IAsyncResult ar)
-        {
-            byte[] size = (byte[]) ar.AsyncState;
-
-
         }
 
         private static void FileReceiveCallback(IAsyncResult ar)
