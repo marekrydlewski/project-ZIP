@@ -16,6 +16,9 @@ namespace project_ZIP.client
         {
             //send File name
             byte[] pathBytes = Encoding.ASCII.GetBytes(Path.GetFileName(path));
+            byte[] pathSizeBytes = BitConverter.GetBytes(pathBytes.Length);
+            if(BitConverter.IsLittleEndian) Array.Reverse(pathSizeBytes);
+            socketFd.Send(pathSizeBytes, pathSizeBytes.Length, 0);
             socketFd.Send(pathBytes, pathBytes.Length, 0);
 
             //send File size
