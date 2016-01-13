@@ -1,7 +1,7 @@
 #include "ServerZip.h"
 #include "ZipArchive.h"
 
-
+using namespace source;
 //Static values must be init
 int ServerZip::socket_fd = -1;
 
@@ -52,12 +52,11 @@ void ServerZip::connect() {
 }
 
 void *ServerZip::threadFunction(void *info) {
-
-    std::cout<<"Connection from: "<< inet_ntoa(_info->connectionAddress.sin_addr)<<std::endl;
-
+    
     int responseSize;
 
     threadInfo *_info = (threadInfo *) info;
+    std::cout<<"Connection from: "<< inet_ntoa(_info->connectionAddress.sin_addr)<<std::endl;
 
     auto path = readData(_info->connection_fd);
     auto file = readData(_info->connection_fd);
@@ -68,9 +67,6 @@ void *ServerZip::threadFunction(void *info) {
 
     std::cout<<path<<std::endl;
 
-
-    responseSize = sizeof(responseInvalid);
-    write(_info->connection_fd, responseInvalid, (size_t) responseSize);
     write(1, "Ending connection\n", 18);
     close(_info->connection_fd);
     free(_info);
