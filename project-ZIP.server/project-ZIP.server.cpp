@@ -9,6 +9,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <pthread.h>
+#include <zip.h>
+#include "ZipArchive.h"
 #include <iostream>
 
 
@@ -25,6 +27,21 @@ struct threadInfo {
 };
 
 int main(int argc, char **argv) {
+
+	///test
+	try {
+		ZipArchive archive{"mydata.zip"};
+		ZipStat stat = archive.stat("README");
+		ZipFile file = archive.open("README");
+
+		std::cout << "content of README:" << std::endl;
+		std::cout << file.read(stat.size);
+	} catch (const std::exception &ex) {
+		std::cerr << ex.what() << std::endl;
+		std::exit(1);
+	}
+	///
+
 	int backlog = 5;
 	int on = 1;
     socket_fd = socket(AF_INET, SOCK_STREAM, 0);
