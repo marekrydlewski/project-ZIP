@@ -34,7 +34,8 @@
             this.FileSelectButton = new System.Windows.Forms.Button();
             this.FileSelectTextBox = new System.Windows.Forms.TextBox();
             this.FileSelectLabel = new System.Windows.Forms.Label();
-            this.FileSelectDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.DirectorySelectDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.FileSaveDialog = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // IPTextBox
@@ -115,7 +116,8 @@
         private System.Windows.Forms.Button FileSelectButton;
         private System.Windows.Forms.TextBox FileSelectTextBox;
         private System.Windows.Forms.Label FileSelectLabel;
-        private System.Windows.Forms.FolderBrowserDialog FileSelectDialog;
+        private System.Windows.Forms.FolderBrowserDialog DirectorySelectDialog;
+        private System.Windows.Forms.SaveFileDialog FileSaveDialog;
     }
 }
 

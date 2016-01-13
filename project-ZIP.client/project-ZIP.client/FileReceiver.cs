@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Windows.Forms;
 
 namespace project_ZIP.client
 {
@@ -57,7 +58,11 @@ namespace project_ZIP.client
             }
             else
             {
-                //send File back to form and save
+                //send File back to form
+                ProjectZip window = (ProjectZip) Application.OpenForms[0];
+                window.setControls(true);
+
+                window.DownloadFile(fileAndSize.File);
 
                 socketFd.Shutdown(SocketShutdown.Both);
                 socketFd.Close();

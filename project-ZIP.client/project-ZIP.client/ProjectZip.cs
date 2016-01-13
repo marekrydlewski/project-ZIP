@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Deployment.Application;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -101,7 +103,7 @@ namespace project_ZIP.client
 
                 DirectorySender.SendDirectory(FileSelectTextBox.Text, socketFd);
 
-                if(FileReceiver.FileReceive(socketFd) == FileReceiver.FileReceiveStatus.OK) setControls(true);
+                FileReceiver.FileReceive(socketFd);
             }
             catch (Exception exc)
             {
@@ -162,10 +164,22 @@ namespace project_ZIP.client
 
         private void FileSelectButton_Click(object sender, EventArgs e)
         {
-            if (FileSelectDialog.ShowDialog() == DialogResult.OK)
+            if (DirectorySelectDialog.ShowDialog() == DialogResult.OK)
             {
-                FileSelectTextBox.Text = FileSelectDialog.SelectedPath;
+                FileSelectTextBox.Text = DirectorySelectDialog.SelectedPath;
             }
+        }
+
+        public void DownloadFile(byte[] fileBytes)
+        {
+            Stream myStream;
+            if (FileSaveDialog.ShowDialog() == DialogResult.OK)
+            {
+                myStream = FileSaveDialog.OpenFile();
+                myStream.Write(fileBytes, 0, fileBytes.Length);
+                myStream.Close();
+            }
+
         }
     }
 }
