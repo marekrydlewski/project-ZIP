@@ -25,14 +25,17 @@ public:
     static ServerZip * getInstance();
     static int socket_fd;
     static void signalHandler(int signal);
-    sockaddr_in fillAddress(int portNumber);
     static void *threadFunction(void *info);
+
+    sockaddr_in fillAddress(int portNumber);
     void connect();
 
 private:
-    threadInfo* info;
+    int backlog; // max length queue listen func
 
-    ServerZip(){};  // Private so that it can  not be called
+    ServerZip(){
+        backlog = 5;
+    };  // Private so that it can  not be called
     ServerZip(ServerZip const&){};             // copy constructor is private
     //ServerZip & operator=(ServerZip const&){};  // assignment operator is private
     static ServerZip * m_pInstance;

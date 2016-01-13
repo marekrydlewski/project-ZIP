@@ -25,7 +25,6 @@ ServerZip *ServerZip::getInstance() {
 }
 
 void ServerZip::connect() {
-    int backlog = 5;
     int on = 1;
     socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
