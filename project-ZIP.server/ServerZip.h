@@ -8,6 +8,12 @@
 #include <netinet/in.h>
 #include <signal.h>
 #include <unistd.h>
+#include <pthread.h>
+#include <string.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <iostream>
 
 class ServerZip {
@@ -18,16 +24,17 @@ class ServerZip {
 public:
     static ServerZip * getInstance();
     static int socket_fd;
-    static void sighandler(int signal);
+    static void signalHandler(int signal);
     sockaddr_in fillAddress(int portNumber);
-    void *threadFunction(void *info);
+    static void *threadFunction(void *info);
+    void connect();
 
 private:
     threadInfo* info;
 
     ServerZip(){};  // Private so that it can  not be called
     ServerZip(ServerZip const&){};             // copy constructor is private
-    ServerZip & operator=(ServerZip const&){};  // assignment operator is private
+    //ServerZip & operator=(ServerZip const&){};  // assignment operator is private
     static ServerZip * m_pInstance;
 };
 

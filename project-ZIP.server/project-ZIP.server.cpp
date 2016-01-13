@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 	///test
 	ServerZip* server;
 	server = ServerZip::getInstance();
-	signal(SIGINT, server->sighandler);
+	signal(SIGINT, server->signalHandler);
 	try {
 		ZipArchive archive{"mydata.zip"};
 		ZipStat stat = archive.stat("README");
@@ -45,7 +45,8 @@ int main(int argc, char **argv) {
 		std::exit(1);
 	}
 	///
-
+    server->connect();
+    /*
 	int backlog = 5;
 	int on = 1;
     socket_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -67,7 +68,7 @@ int main(int argc, char **argv) {
 
         pthread_create(&threadId, NULL, threadFunction, info);
         pthread_detach(threadId);
-    }
+    }*/
 }
 
 
