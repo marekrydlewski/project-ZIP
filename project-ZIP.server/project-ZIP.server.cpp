@@ -11,6 +11,7 @@
 #include <pthread.h>
 #include <zip.h>
 #include "ZipArchive.h"
+#include "ServerZip.h"
 #include <iostream>
 
 
@@ -29,6 +30,8 @@ struct threadInfo {
 int main(int argc, char **argv) {
 
 	///test
+	ServerZip* server;
+	server = ServerZip::getInstance();
 	try {
 		ZipArchive archive{"mydata.zip"};
 		ZipStat stat = archive.stat("README");
