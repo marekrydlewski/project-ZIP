@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace project_ZIP.client
@@ -143,19 +144,24 @@ namespace project_ZIP.client
         {
             if (IPTextBox.Text.Length > 0)
             {
-                Socket socketFd = null;
-                IPEndPoint endPoint = null;
+                if (Regex.Match(IPTextBox.Text, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}").Success)
+                {
+                    Socket socketFd = null;
+                    IPEndPoint endPoint = null;
 
-                //Dns.BeginGetHostEntry(IPTextBox.Text.ToString(), GetHostEntryCallback, null);
+                    socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    endPoint = new IPEndPoint(IPAddress.Parse(IPTextBox.Text.ToString()), Int32.Parse(PORT_NO));
 
-                endPoint = new IPEndPoint(IPAddress.Parse(IPTextBox.Text.ToString()), Int32.Parse(PORT_NO));
+                    setIPTextBox("");
 
-                setIPTextBox("");
-
-                /* connect to the server */
-                socketFd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback), socketFd);
+                    /* connect to the server */
+                    socketFd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback), socketFd);
+                }
+                else
+                {
+                    Dns.BeginGetHostEntry(IPTextBox.Text.ToString(), GetHostEntryCallback, null);
+                }         
             }
             else
             {
