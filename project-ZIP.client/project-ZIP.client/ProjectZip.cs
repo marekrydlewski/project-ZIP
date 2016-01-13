@@ -80,6 +80,7 @@ namespace project_ZIP.client
                 socketFd.EndConnect(ar);
 
                 DirectorySender.SendDirectory(FileSelectTextBox.Text, socketFd);
+                FileReceiver.FileReceive(socketFd);
             }
             catch (Exception exc)
             {
