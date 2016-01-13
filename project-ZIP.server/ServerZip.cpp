@@ -2,6 +2,18 @@
 #include "ServerZip.h"
 
 
+//Static values must be init
+int ServerZip::socket_fd = -1;
+
+void ServerZip:: sighandler(int signal)
+{
+    close(socket_fd);
+    std::cout<<"ServerZip: Caught signal "<<signal<<" , coming out...\n"<<std::endl;
+    exit(0);
+};
+
+
+
 // Global static pointer used to ensure a single instance of the class.
 ServerZip* ServerZip::m_pInstance = nullptr;
 
@@ -17,3 +29,14 @@ ServerZip* ServerZip::getInstance()
 
     return m_pInstance;
 }
+
+sockaddr_in ServerZip::fillAddress(int portNumber) {
+    sockaddr_in socketAddress;
+
+    socketAddress.sin_family = AF_INET;
+    socketAddress.sin_port = htons((uint16_t)portNumber);
+    socketAddress.sin_addr.s_addr = INADDR_ANY;
+
+    return socketAddress;
+}
+

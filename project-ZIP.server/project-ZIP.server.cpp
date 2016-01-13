@@ -32,6 +32,7 @@ int main(int argc, char **argv) {
 	///test
 	ServerZip* server;
 	server = ServerZip::getInstance();
+	signal(SIGINT, server->sighandler);
 	try {
 		ZipArchive archive{"mydata.zip"};
 		ZipStat stat = archive.stat("README");
@@ -55,7 +56,7 @@ int main(int argc, char **argv) {
     bind(socket_fd, (sockaddr *) &socketAddress, sizeof(socketAddress));
 
     listen(socket_fd, backlog);
-    signal(SIGINT, sighandler);
+    //signal(SIGINT, sighandler);
 
     while (1) {
         pthread_t threadId;
