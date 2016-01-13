@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace project_ZIP.client
 {
@@ -20,9 +16,11 @@ namespace project_ZIP.client
             //receive File size
             int size = 0;
             //receive File
-            FileAndSize fas = new FileAndSize();
-            fas.SizeRemaining = size;
-            fas.SocketFd = socketFd;
+            FileAndSize fas = new FileAndSize
+            {
+                SizeRemaining = size,
+                SocketFd = socketFd
+            };
 
             socketFd.BeginReceive(fas.Buffer, 0, FileAndSize.BUF_SIZE, 0,  new AsyncCallback(FileReceiveCallback), fas);
 

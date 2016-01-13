@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -10,7 +9,7 @@ namespace project_ZIP.client
 {
     public partial class ProjectZip : Form
     { 
-        private Form window;
+        private Form _window;
         private string PORT_NO = "1234";
 
         private delegate void setIPTextBoxCallback(string text);
@@ -20,7 +19,7 @@ namespace project_ZIP.client
         public ProjectZip()
         {
             InitializeComponent();
-            window = this;
+            _window = this;
         }
 
         private void setIPTextBox(string text)
@@ -28,7 +27,7 @@ namespace project_ZIP.client
             if (IPTextBox.InvokeRequired)
             {
                 setIPTextBoxCallback IPTextBoxCallback = setIPTextBox;
-                window.Invoke(IPTextBoxCallback, text);
+                _window.Invoke(IPTextBoxCallback, text);
             }
             else
             {
@@ -40,8 +39,8 @@ namespace project_ZIP.client
         {
             if (IPTextBox.InvokeRequired || FileSelectButton.InvokeRequired || FileSelectTextBox.InvokeRequired)
             {
-                setControlsCallback ControlsCallback = setControls;
-                window.Invoke(ControlsCallback, state);
+                setControlsCallback controlsCallback = setControls;
+                _window.Invoke(controlsCallback, state);
             }
             else
             {
@@ -83,7 +82,7 @@ namespace project_ZIP.client
             }
             catch (Exception exc)
             {
-                MessageBox.Show("Exception:\t\n" + exc.Message.ToString());
+                MessageBox.Show("Exception:\t\n" + exc.Message);
             }
         }
 
@@ -106,7 +105,7 @@ namespace project_ZIP.client
             }
             catch (Exception exc)
             {
-                MessageBox.Show("Exception:\t\n" + exc.Message.ToString());
+                MessageBox.Show("Exception:\t\n" + exc.Message);
             }
         }
 
@@ -114,20 +113,15 @@ namespace project_ZIP.client
         {
             try
             {
-                IPHostEntry hostEntry = null;
-                IPAddress[] addresses = null;
-                Socket socketFd = null;
-                IPEndPoint endPoint = null;
-
                 /* complete the DNS query */
-                hostEntry = Dns.EndGetHostEntry(ar);
-                addresses = hostEntry.AddressList;
+                var hostEntry = Dns.EndGetHostEntry(ar);
+                var addresses = hostEntry.AddressList;
 
                 /* create a socket */
-                socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                var socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                 /* remote endpoint for the socket */
-                endPoint = new IPEndPoint(addresses[0], Int32.Parse(PORT_NO));
+                var endPoint = new IPEndPoint(addresses[0], Int32.Parse(PORT_NO));
 
                 setIPTextBox("");
 
@@ -136,22 +130,20 @@ namespace project_ZIP.client
             }
             catch (Exception exc)
             {
-                MessageBox.Show("Exception:\t\n" + exc.Message.ToString());
+                MessageBox.Show("Exception:\t\n" + exc.Message);
             }
         }
 
         private void CompressButton_Click(object sender, EventArgs e)
         {
+            TEST();
             if (IPTextBox.Text.Length > 0)
             {
                 if (Regex.Match(IPTextBox.Text, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}").Success)
                 {
-                    Socket socketFd = null;
-                    IPEndPoint endPoint = null;
+                    var socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                    socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-                    endPoint = new IPEndPoint(IPAddress.Parse(IPTextBox.Text.ToString()), Int32.Parse(PORT_NO));
+                    var endPoint = new IPEndPoint(IPAddress.Parse(IPTextBox.Text), Int32.Parse(PORT_NO));
 
                     setIPTextBox("");
 
@@ -160,7 +152,7 @@ namespace project_ZIP.client
                 }
                 else
                 {
-                    Dns.BeginGetHostEntry(IPTextBox.Text.ToString(), GetHostEntryCallback, null);
+                    Dns.BeginGetHostEntry(IPTextBox.Text, GetHostEntryCallback, null);
                 }         
             }
             else
@@ -175,6 +167,11 @@ namespace project_ZIP.client
             {
                 FileSelectTextBox.Text = FileSelectDialog.SelectedPath;
             }
+        }
+
+        private void TEST()
+        {
+            FileSender.SendFile("C:\\Users\\jablo\\OneDrive\\Dokumenty\\cv.pdf", null);
         }
     }
 }
