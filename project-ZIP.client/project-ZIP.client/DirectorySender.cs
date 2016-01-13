@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 
 namespace project_ZIP.client
 {
@@ -12,33 +13,25 @@ namespace project_ZIP.client
             OK, ERROR
         }
 
-        public static SendDirectoryStatus SendDirectory(string path, Collection<string> fileMap = null, string parentDirectory = "")
+        public static SendDirectoryStatus SendDirectory(string path, Socket socketFd, string parentDirectory = "")
         {
-            bool entryPoint = (fileMap == null ? true : false);
-
-            if (fileMap == null) fileMap = new Collection<string>();
-
             string dirName = Path.Combine(parentDirectory, Path.GetFileName(path));
 
             string[] files = Directory.GetFiles(path);
             string[] subdirectories = Directory.GetDirectories(path);
 
-            //send files
-
-            foreach (var fileName in files)
-            {
-                fileMap.Add(Path.Combine(dirName, Path.GetFileName(fileName)));
+            foreach (var filePath in files)
+            { 
+                FileSender.SendFile(filePath, socketFd);
             }
 
             foreach (var subdirectoryPath in subdirectories)
             {
-                if (SendDirectory(subdirectoryPath, fileMap, dirName) == SendDirectoryStatus.ERROR)
+                if (SendDirectory(subdirectoryPath, socketFd, dirName) == SendDirectoryStatus.ERROR)
                 {
                     return SendDirectoryStatus.ERROR;
                 }
             }
-
-            //if entryPoint send filemap
 
             return SendDirectoryStatus.OK;
         }

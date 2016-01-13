@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DirectorySender.cs" />
+    <Compile Include="FileAndSize.cs" />
+    <Compile Include="FileReceiver.cs" />
     <Compile Include="FileSender.cs" />
     <Compile Include="ProjectZip.cs">
       <SubType>Form</SubType>

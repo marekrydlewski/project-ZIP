@@ -12,8 +12,6 @@ namespace project_ZIP.client
         private Form window;
         private string PORT_NO = "1234";
 
-        private delegate void setLabelCallback(string text);
-
         private delegate void setIPTextBoxCallback(string text);
  
         public ProjectZip()
@@ -32,19 +30,6 @@ namespace project_ZIP.client
             else
             {
                 IPTextBox.Text = text;
-            }
-        }
-
-        private void setLabel(string text)
-        {
-            if (label1.InvokeRequired)
-            {
-                setLabelCallback labelCallback = setLabel;
-                window.Invoke(labelCallback, text);
-            }
-            else
-            {
-                label1.Text = text;
             }
         }
 
@@ -71,7 +56,6 @@ namespace project_ZIP.client
                     /* all the data has arrived */
                     if (state.m_StringBuilder.Length > 1)
                     {
-                        setLabel(state.m_StringBuilder.ToString());
 
                         /* shutdown and close socket */
                         socketFd.Shutdown(SocketShutdown.Both);
@@ -82,7 +66,6 @@ namespace project_ZIP.client
             catch (Exception exc)
             {
                 MessageBox.Show("Exception:\t\n" + exc.Message.ToString());
-                setLabel("OOOOOOOOPS");
             }
         }
 
@@ -96,19 +79,11 @@ namespace project_ZIP.client
                 /* complete the connection */
                 socketFd.EndConnect(ar);
 
-                /* create the SocketStateObject */
-                SocketStateObject state = new SocketStateObject();
-                state.m_SocketFd = socketFd;
-
-                setLabel("Yay, connected!");
-
-                /* begin receiving the data */
-                socketFd.BeginReceive(state.m_DataBuf, 0, SocketStateObject.BUF_SIZE, 0, new AsyncCallback(ReceiveCallback), state);
+                DirectorySender.SendDirectory(FileSelectTextBox.Text, socketFd);
             }
             catch (Exception exc)
             {
                 MessageBox.Show("Exception:\t\n" + exc.Message.ToString());
-                setLabel("OOOOOOOOPS!");
             }
         }
 
@@ -131,7 +106,6 @@ namespace project_ZIP.client
                 /* remote endpoint for the socket */
                 endPoint = new IPEndPoint(addresses[0], Int32.Parse(PORT_NO));
 
-                setLabel("Wait! Connecting...");
                 setIPTextBox("");
 
                 /* connect to the server */
@@ -140,7 +114,6 @@ namespace project_ZIP.client
             catch (Exception exc)
             {
                 MessageBox.Show("Exception:\t\n" + exc.Message.ToString());
-                setLabel("Check \"Server Info\" and try again!");
             }
         }
 
@@ -158,7 +131,6 @@ namespace project_ZIP.client
 
                 endPoint = new IPEndPoint(IPAddress.Parse(IPTextBox.Text.ToString()), Int32.Parse(PORT_NO));
 
-                setLabel("Wait! Connecting...");
                 setIPTextBox("");
 
                 /* connect to the server */
@@ -166,7 +138,7 @@ namespace project_ZIP.client
             }
             else
             {
-                setLabel("IP address empty");
+                MessageBox.Show("IP address empty");
             }
         }
 

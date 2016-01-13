@@ -33,7 +33,7 @@
             this.CompressButton = new System.Windows.Forms.Button();
             this.FileSelectButton = new System.Windows.Forms.Button();
             this.FileSelectTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.FileSelectLabel = new System.Windows.Forms.Label();
             this.FileSelectDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
             // 
@@ -80,21 +80,21 @@
             this.FileSelectTextBox.Size = new System.Drawing.Size(175, 20);
             this.FileSelectTextBox.TabIndex = 5;
             // 
-            // label1
+            // FileSelectLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 47);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(175, 13);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Select folder you want to compress:";
+            this.FileSelectLabel.AutoSize = true;
+            this.FileSelectLabel.Location = new System.Drawing.Point(13, 47);
+            this.FileSelectLabel.Name = "FileSelectLabel";
+            this.FileSelectLabel.Size = new System.Drawing.Size(175, 13);
+            this.FileSelectLabel.TabIndex = 6;
+            this.FileSelectLabel.Text = "Select folder you want to compress:";
             // 
             // ProjectZip
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 124);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.FileSelectLabel);
             this.Controls.Add(this.FileSelectTextBox);
             this.Controls.Add(this.FileSelectButton);
             this.Controls.Add(this.CompressButton);
@@ -114,7 +114,7 @@
         private System.Windows.Forms.Button CompressButton;
         private System.Windows.Forms.Button FileSelectButton;
         private System.Windows.Forms.TextBox FileSelectTextBox;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label FileSelectLabel;
         private System.Windows.Forms.FolderBrowserDialog FileSelectDialog;
     }
 }
