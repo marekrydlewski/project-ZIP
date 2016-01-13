@@ -1,3 +1,3 @@
 #!/bin/bash
 cd ${0%/*}
-g++ -std=c++11 ./project-ZIP.server.cpp -pthread -o ./server -Wall
+g++ -std=c++14 ./ZipArchive.cpp ./project-ZIP.server.cpp -I/usr/local/lib/libzip/include -lzip -pthread -o ./server -Wall
