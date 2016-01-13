@@ -18,7 +18,7 @@ namespace project_ZIP.client
             byte[] pathBytes = Encoding.ASCII.GetBytes(Path.GetFileName(path));
 
             byte[] pathSizeBytes = BitConverter.GetBytes(pathBytes.Length);
-            if(BitConverter.IsLittleEndian) Array.Reverse(pathSizeBytes);
+            //if(BitConverter.IsLittleEndian) Array.Reverse(pathSizeBytes);
 
             socketFd.Send(pathSizeBytes, pathSizeBytes.Length, 0);
 
@@ -28,7 +28,7 @@ namespace project_ZIP.client
             byte[] file = File.ReadAllBytes(path);
 
             byte[] fileSizeBytes = BitConverter.GetBytes(file.Length);
-            if(BitConverter.IsLittleEndian) Array.Reverse(fileSizeBytes);
+            //if(BitConverter.IsLittleEndian) Array.Reverse(fileSizeBytes);
 
             socketFd.Send(fileSizeBytes, fileSizeBytes.Length, 0);
 
@@ -56,7 +56,7 @@ namespace project_ZIP.client
             if (fileAndSize.SizeRemaining > 0)
             {
                 socketFd.BeginSend(fileAndSize.File, (fileAndSize.FileSize - fileAndSize.SizeRemaining),
-                    FileAndSize.BUF_SIZE, 0, new AsyncCallback(SendFileCallback), fileAndSize);
+                    (fileAndSize.SizeRemaining > FileAndSize.BUF_SIZE ? FileAndSize.BUF_SIZE : fileAndSize.SizeRemaining), 0, new AsyncCallback(SendFileCallback), fileAndSize);
             }
         }
     }

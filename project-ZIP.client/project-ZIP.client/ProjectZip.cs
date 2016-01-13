@@ -47,6 +47,7 @@ namespace project_ZIP.client
                 FileSelectTextBox.Enabled = state;
                 FileSelectButton.Enabled = state;
                 IPTextBox.Enabled = state;
+                CompressButton.Enabled = state;
             }
         }
 
@@ -136,7 +137,6 @@ namespace project_ZIP.client
 
         private void CompressButton_Click(object sender, EventArgs e)
         {
-            TEST();
             if (IPTextBox.Text.Length > 0)
             {
                 if (Regex.Match(IPTextBox.Text, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}").Success)
@@ -167,11 +167,6 @@ namespace project_ZIP.client
             {
                 FileSelectTextBox.Text = FileSelectDialog.SelectedPath;
             }
-        }
-
-        private void TEST()
-        {
-            FileSender.SendFile("C:\\Users\\jablo\\OneDrive\\Dokumenty\\cv.pdf", null);
         }
     }
 }
