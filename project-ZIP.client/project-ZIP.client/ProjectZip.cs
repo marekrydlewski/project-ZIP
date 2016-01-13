@@ -13,6 +13,8 @@ namespace project_ZIP.client
         private string PORT_NO = "1234";
 
         private delegate void setIPTextBoxCallback(string text);
+
+        private delegate void setControlsCallback(bool state);
  
         public ProjectZip()
         {
@@ -30,6 +32,21 @@ namespace project_ZIP.client
             else
             {
                 IPTextBox.Text = text;
+            }
+        }
+
+        private void setControls(bool state)
+        {
+            if (IPTextBox.InvokeRequired || FileSelectButton.InvokeRequired || FileSelectTextBox.InvokeRequired)
+            {
+                setControlsCallback ControlsCallback = setControls;
+                window.Invoke(ControlsCallback, state);
+            }
+            else
+            {
+                FileSelectTextBox.Enabled = state;
+                FileSelectButton.Enabled = state;
+                IPTextBox.Enabled = state;
             }
         }
 
@@ -79,8 +96,12 @@ namespace project_ZIP.client
                 /* complete the connection */
                 socketFd.EndConnect(ar);
 
+                setControls(false);
+
                 DirectorySender.SendDirectory(FileSelectTextBox.Text, socketFd);
                 FileReceiver.FileReceive(socketFd);
+
+                setControls(true);
             }
             catch (Exception exc)
             {
@@ -122,7 +143,6 @@ namespace project_ZIP.client
         {
             if (IPTextBox.Text.Length > 0)
             {
-                IPAddress[] addresses = null;
                 Socket socketFd = null;
                 IPEndPoint endPoint = null;
 

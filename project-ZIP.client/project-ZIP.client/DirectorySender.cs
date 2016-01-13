@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 
@@ -10,7 +8,7 @@ namespace project_ZIP.client
     {
         public enum  SendDirectoryStatus
         {
-            OK, ERROR
+            Ok, Error
         }
 
         public static SendDirectoryStatus SendDirectory(string path, Socket socketFd, string parentDirectory = "")
@@ -25,15 +23,12 @@ namespace project_ZIP.client
                 FileSender.SendFile(filePath, socketFd);
             }
 
-            foreach (var subdirectoryPath in subdirectories)
+            if (subdirectories.Any(subdirectoryPath => SendDirectory(subdirectoryPath, socketFd, dirName) == SendDirectoryStatus.Error))
             {
-                if (SendDirectory(subdirectoryPath, socketFd, dirName) == SendDirectoryStatus.ERROR)
-                {
-                    return SendDirectoryStatus.ERROR;
-                }
+                return SendDirectoryStatus.Error;
             }
 
-            return SendDirectoryStatus.OK;
+            return SendDirectoryStatus.Ok;
         }
     }
 }

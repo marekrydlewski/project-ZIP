@@ -17,14 +17,14 @@ namespace project_ZIP.client
 
         public static FileReceiveStatus FileReceive(Socket socketFd)
         {
-            //receive file size
+            //receive File size
             int size = 0;
-            //receive file
+            //receive File
             FileAndSize fas = new FileAndSize();
-            fas.sizeRemaining = size;
-            fas.socketFd = socketFd;
+            fas.SizeRemaining = size;
+            fas.SocketFd = socketFd;
 
-            socketFd.BeginReceive(fas.buffer, 0, FileAndSize.BUF_SIZE, 0,  new AsyncCallback(FileReceiveCallback), fas);
+            socketFd.BeginReceive(fas.Buffer, 0, FileAndSize.BUF_SIZE, 0,  new AsyncCallback(FileReceiveCallback), fas);
 
             return FileReceiveStatus.OK;
         }
@@ -44,22 +44,22 @@ namespace project_ZIP.client
         private static void FileReceiveCallback(IAsyncResult ar)
         {
             FileAndSize fileAndSize = (FileAndSize) ar.AsyncState;
-            Socket socketFd = fileAndSize.socketFd;
+            Socket socketFd = fileAndSize.SocketFd;
 
-            int bytesReceived = fileAndSize.socketFd.EndReceive(ar);
+            int bytesReceived = fileAndSize.SocketFd.EndReceive(ar);
 
-            fileAndSize.sizeRemaining -= bytesReceived;
+            fileAndSize.SizeRemaining -= bytesReceived;
 
-            fileAndSize.file = Combine(fileAndSize.file, fileAndSize.buffer);
+            fileAndSize.File = Combine(fileAndSize.File, fileAndSize.Buffer);
 
-            if (fileAndSize.sizeRemaining > 0)
+            if (fileAndSize.SizeRemaining > 0)
             {
-                socketFd.BeginReceive(fileAndSize.buffer, 0, FileAndSize.BUF_SIZE, 0,
+                socketFd.BeginReceive(fileAndSize.Buffer, 0, FileAndSize.BUF_SIZE, 0,
                     new AsyncCallback(FileReceiveCallback), fileAndSize);
             }
             else
             {
-                //send file back to form and save
+                //send File back to form and save
 
                 socketFd.Shutdown(SocketShutdown.Both);
                 socketFd.Close();

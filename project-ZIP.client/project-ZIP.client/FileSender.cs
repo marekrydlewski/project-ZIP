@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace project_ZIP.client
 {
@@ -12,27 +9,29 @@ namespace project_ZIP.client
     {
         public enum SendFileStatus
         {
-            OK, ERROR
+            Ok, Error
         }
 
         public static void SendFile(string path, Socket socketFd)
         {
-            //send file name
+            //send File name
             byte[] pathBytes = Encoding.ASCII.GetBytes(Path.GetFileName(path));
             socketFd.Send(pathBytes, pathBytes.Length, 0);
 
-            //send file size
+            //send File size
             byte[] file = System.IO.File.ReadAllBytes(path);
             byte[] fileSizeBytes = BitConverter.GetBytes(file.Length);
             if(BitConverter.IsLittleEndian) Array.Reverse(fileSizeBytes);
             socketFd.Send(fileSizeBytes, fileSizeBytes.Length, 0);
 
-            //send file
-            FileAndSize fas = new FileAndSize();
-            fas.socketFd = socketFd;
-            fas.file = file;
-            fas.fileSize = file.Length;
-            fas.sizeRemaining = file.Length;
+            //send File
+            FileAndSize fas = new FileAndSize
+            {
+                SocketFd = socketFd,
+                File = file,
+                FileSize = file.Length,
+                SizeRemaining = file.Length
+            };
 
             socketFd.BeginSend(file, 0, FileAndSize.BUF_SIZE, 0, new AsyncCallback(SendFileCallback), fas);
         }
@@ -41,14 +40,14 @@ namespace project_ZIP.client
         {
             FileAndSize fileAndSize = (FileAndSize) ar.AsyncState;
 
-            Socket socketFd = fileAndSize.socketFd;
+            Socket socketFd = fileAndSize.SocketFd;
             int bytesSent = socketFd.EndSend(ar);
 
-            fileAndSize.sizeRemaining -= bytesSent;
+            fileAndSize.SizeRemaining -= bytesSent;
 
-            if (fileAndSize.sizeRemaining > 0)
+            if (fileAndSize.SizeRemaining > 0)
             {
-                socketFd.BeginSend(fileAndSize.file, (fileAndSize.fileSize - fileAndSize.sizeRemaining),
+                socketFd.BeginSend(fileAndSize.File, (fileAndSize.FileSize - fileAndSize.SizeRemaining),
                     FileAndSize.BUF_SIZE, 0, new AsyncCallback(SendFileCallback), fileAndSize);
             }
         }
