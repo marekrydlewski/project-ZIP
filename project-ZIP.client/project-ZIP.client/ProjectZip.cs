@@ -35,7 +35,7 @@ namespace project_ZIP.client
             }
         }
 
-        private void setControls(bool state)
+        public void setControls(bool state)
         {
             if (IPTextBox.InvokeRequired || FileSelectButton.InvokeRequired || FileSelectTextBox.InvokeRequired)
             {
@@ -100,9 +100,8 @@ namespace project_ZIP.client
                 setControls(false);
 
                 DirectorySender.SendDirectory(FileSelectTextBox.Text, socketFd);
-                FileReceiver.FileReceive(socketFd);
 
-                setControls(true);
+                if(FileReceiver.FileReceive(socketFd) == FileReceiver.FileReceiveStatus.OK) setControls(true);
             }
             catch (Exception exc)
             {
