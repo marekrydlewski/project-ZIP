@@ -44,8 +44,10 @@ namespace project_ZIP.client
         private static void sendFilesNumber(Socket socketFd, int filesNumber)
         {
             byte[] filesNumberBytes = BitConverter.GetBytes(filesNumber);
+            byte[] filesNumberSizeBytes = BitConverter.GetBytes(sizeof (int));
 
-            socketFd.Send(filesNumberBytes, sizeof(int), 0);
+            socketFd.Send(filesNumberSizeBytes, sizeof (int), 0);
+            socketFd.Send(filesNumberBytes, sizeof (int), 0);
         }
     }
 }
