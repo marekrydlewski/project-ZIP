@@ -53,7 +53,7 @@ void ServerZip::connect() {
 }
 
 void *ServerZip::threadFunction(void *info) {
-    
+
     threadInfo *_info = (threadInfo *) info;
     std::cout<<"Connection from: "<< inet_ntoa(_info->connectionAddress.sin_addr)<<std::endl;
 
@@ -74,6 +74,7 @@ void *ServerZip::threadFunction(void *info) {
     str.assign((std::istreambuf_iterator<char>(t)),
                std::istreambuf_iterator<char>());
 
+    writeData(_info->connection_fd, std::to_string(str.length()));
     writeData(_info->connection_fd, str);
 
     write(1, "Ending connection\n", 18);
