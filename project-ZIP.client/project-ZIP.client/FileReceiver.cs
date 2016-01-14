@@ -18,6 +18,7 @@ namespace project_ZIP.client
             byte[] sizeBytes = new byte[sizeof(int)];
             socketFd.Receive(sizeBytes, sizeBytes.Length, 0);
             int size = BitConverter.ToInt32(sizeBytes, 0);
+
             //receive File
             FileAndSize fas = new FileAndSize
             {
@@ -48,11 +49,11 @@ namespace project_ZIP.client
             }
             else
             {
-                //send File back to form
                 ProjectZip window = (ProjectZip) Application.OpenForms[0];
                 window.setControls(true);
                 window.setIPTextBox("");
 
+                //send file back to form
                 window.DownloadFile(fileAndSize.File);
 
                 socketFd.Shutdown(SocketShutdown.Both);
@@ -60,6 +61,7 @@ namespace project_ZIP.client
             }
         }
 
+        //method for combining two byte arrays
         private static byte[] Combine(byte[] first, byte[] second)
         {
             byte[] ret = new byte[first.Length + second.Length];

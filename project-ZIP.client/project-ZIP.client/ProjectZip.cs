@@ -32,6 +32,7 @@ namespace project_ZIP.client
             }
         }
 
+        //set controls on form to enabled/disabled
         public void setControls(bool state)
         {
             if (IPTextBox.InvokeRequired || FileSelectButton.InvokeRequired || FileSelectTextBox.InvokeRequired)

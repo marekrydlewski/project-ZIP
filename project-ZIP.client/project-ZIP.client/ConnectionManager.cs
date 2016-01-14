@@ -28,6 +28,7 @@ namespace project_ZIP.client
             try
             {
                 string PORT_NO = (string) ar.AsyncState;
+
                 /* complete the DNS query */
                 var hostEntry = Dns.EndGetHostEntry(ar);
                 var addresses = hostEntry.AddressList;
@@ -60,7 +61,10 @@ namespace project_ZIP.client
                 ProjectZip window = (ProjectZip)Application.OpenForms[0];
                 window.setControls(false);
 
+                //handle for threads control
                 ManualResetEvent sendHandle = new ManualResetEvent(false);
+
+                //send directory, wait for finished sending, then receive compressed file
                 DirectorySender.SendDirectory("C:\\Users\\jablo\\OneDrive\\Dokumenty", socketFd, sendHandle);
                 //DirectorySender.SendDirectory(window.FileSelectTextBoxText(), socketFd, sendHandle);
                 sendHandle.WaitOne();

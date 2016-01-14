@@ -19,7 +19,6 @@ namespace project_ZIP.client
             byte[] pathBytes = Encoding.ASCII.GetBytes(Path.GetFileName(path));
 
             byte[] pathSizeBytes = BitConverter.GetBytes(pathBytes.Length);
-            //if(BitConverter.IsLittleEndian) Array.Reverse(pathSizeBytes);
 
             socketFd.Send(pathSizeBytes, pathSizeBytes.Length, 0);
 
@@ -29,7 +28,6 @@ namespace project_ZIP.client
             byte[] file = File.ReadAllBytes(path);
 
             byte[] fileSizeBytes = BitConverter.GetBytes(file.Length);
-            //if(BitConverter.IsLittleEndian) Array.Reverse(fileSizeBytes);
 
             socketFd.Send(fileSizeBytes, fileSizeBytes.Length, 0);
 
