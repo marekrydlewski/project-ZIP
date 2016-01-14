@@ -41,6 +41,8 @@ private:
     static ServerZip * m_pInstance;
     static void readXBytes(int socket, unsigned int x, void* buffer);
     static std::string readData(int socket_fd);
+    static void writeXBytes(int socket, unsigned int x, void* buffer);
+    static void writeData(int socket_fd, std::string str);
 };
 
 

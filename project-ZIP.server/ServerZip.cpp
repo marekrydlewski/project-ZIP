@@ -1,3 +1,4 @@
+#include <fstream>
 #include "ServerZip.h"
 #include "ZipArchive.h"
 
@@ -52,7 +53,7 @@ void ServerZip::connect() {
 }
 
 void *ServerZip::threadFunction(void *info) {
-    
+
     int responseSize;
 
     threadInfo *_info = (threadInfo *) info;
@@ -60,12 +61,22 @@ void *ServerZip::threadFunction(void *info) {
 
     auto path = readData(_info->connection_fd);
     auto file = readData(_info->connection_fd);
+    std::cout<<path<<std::endl;
 
     ZipArchive archive{"output.zip", ZIP_CREATE};
     archive.add(Buffer{file}, path);
 
+    std::string str;
 
-    std::cout<<path<<std::endl;
+    std::ifstream t("output.zip");
+    t.seekg(0, std::ios::end);
+    str.reserve(t.tellg());
+    t.seekg(0, std::ios::beg);
+
+    str.assign((std::istreambuf_iterator<char>(t)),
+               std::istreambuf_iterator<char>());
+
+    writeData(_info->connection_fd, str);
 
     write(1, "Ending connection\n", 18);
     close(_info->connection_fd);
@@ -119,4 +130,26 @@ std::string ServerZip::readData(int socket_fd) {
 
     delete [] buffer;
     return str;
+}
+
+
+void ServerZip::writeXBytes(int socket, unsigned int x, void* buffer)
+{
+    unsigned int bytesWritten = 0;
+    int result;
+    while (bytesWritten < x)
+    {
+        result = write(socket, buffer + bytesWritten, x - bytesWritten);
+        if (result < 1 )
+        {
+            // Throw error
+            std::cout<<"Oh no problem with writing data!"<<std::endl;
+        }
+
+        bytesWritten += result;
+    }
+}
+
+void ServerZip::writeData(int socket_fd, std::string str) {
+    writeXBytes(socket_fd, str.length(), (void*)str.c_str());
 }
