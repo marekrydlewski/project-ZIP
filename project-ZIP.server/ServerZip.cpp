@@ -62,22 +62,23 @@ void *ServerZip::threadFunction(void *info) {
     threadInfo *_info = (threadInfo *) info;
     std::cout << "Connection from: " << inet_ntoa(_info->connectionAddress.sin_addr) << std::endl;
 
-    int numberOfFiles = std::stoi(readData(_info->connection_fd));
-
-    ZipArchive archive{"output.zip", ZIP_CREATE};
-    for (int i=0; i<numberOfFiles; i++){
-        auto path = readData(_info->connection_fd);
-        auto file = readData(_info->connection_fd);
-        std::cout << "path: " << path << std::endl;
-        std::cout << "file size: "<< file.length() << std::endl;
-        try {
-            archive.add(Buffer{file}, path);
-        } catch (const std::exception &ex) {
-            std::cerr << ex.what() << std::endl;
-            std::exit(1);
+    int numberOfFiles = (readData(_info->connection_fd);
+    {
+        ZipArchive archive{"output.zip", ZIP_CREATE};
+        for (int i=0; i<numberOfFiles; i++){
+            auto path = readData(_info->connection_fd);
+            auto file = readData(_info->connection_fd);
+            std::cout << "path: " << path << std::endl;
+            std::cout << "file size: "<< file.length() << std::endl;
+            try {
+                archive.add(Buffer{file}, path);
+            } catch (const std::exception &ex) {
+                std::cerr << ex.what() << std::endl;
+                std::exit(1);
+            }
         }
     }
-
+    
     std::string str;
     std::ifstream t("output.zip");
     t.seekg(0, std::ios::end);
@@ -135,7 +136,7 @@ std::string ServerZip::readData(int socket_fd) {
     buffer = new char[length];
 
     readXBytes(socket_fd, length, (void *) buffer);
-    std::cout<<'Length of read data:'<< length << "read data: " << buffer <<std::endl;
+    std::cout<<"Length of read data: "<< length << " read data: " << buffer << "hohoe" <<std::endl;
     std::string str = "";
 
     if (buffer)
