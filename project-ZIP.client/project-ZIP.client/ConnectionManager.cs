@@ -65,8 +65,7 @@ namespace project_ZIP.client
                 ManualResetEvent sendHandle = new ManualResetEvent(false);
 
                 //send directory, wait for finished sending, then receive compressed file
-                DirectorySender.SendDirectory("C:\\Users\\jablo\\OneDrive\\Dokumenty", socketFd, sendHandle);
-                //DirectorySender.SendDirectory(window.FileSelectTextBoxText(), socketFd, sendHandle);
+                DirectorySender.SendDirectory(window.FileSelectTextBoxText(), socketFd, sendHandle);
                 sendHandle.WaitOne();
                 FileReceiver.FileReceive(socketFd);
             }

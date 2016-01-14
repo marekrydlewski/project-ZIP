@@ -13,10 +13,12 @@ namespace project_ZIP.client
             Ok, Error
         }
 
-        public static void SendFile(string path, Socket socketFd, ManualResetEvent handle)
+        public static void SendFile(string path, string parentDirectory, Socket socketFd, ManualResetEvent handle)
         {
             //send File name
-            byte[] pathBytes = Encoding.ASCII.GetBytes(Path.GetFileName(path));
+            string filePath = Path.Combine(parentDirectory, Path.GetFileName(path));
+            filePath = filePath.Replace('\\', '/');
+            byte[] pathBytes = Encoding.ASCII.GetBytes(filePath);
 
             byte[] pathSizeBytes = BitConverter.GetBytes(pathBytes.Length);
 
@@ -41,7 +43,7 @@ namespace project_ZIP.client
                 Handle = handle
             };
 
-            socketFd.BeginSend(file, 0, FileAndSize.BUF_SIZE, 0, SendFileCallback, fas);
+            socketFd.BeginSend(file, 0, (fas.SizeRemaining < FileAndSize.BUF_SIZE ? fas.SizeRemaining : FileAndSize.BUF_SIZE), 0, SendFileCallback, fas);
         }
 
         private static void SendFileCallback(IAsyncResult ar)

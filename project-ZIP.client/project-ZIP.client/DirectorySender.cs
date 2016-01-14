@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 namespace project_ZIP.client
@@ -28,7 +29,7 @@ namespace project_ZIP.client
             { 
                 ManualResetEvent fileHandle = new ManualResetEvent(false);
 
-                FileSender.SendFile(filePath, socketFd, fileHandle);
+                FileSender.SendFile(filePath, dirName, socketFd, fileHandle);
 
                 fileHandle.WaitOne();
             }
@@ -50,11 +51,11 @@ namespace project_ZIP.client
 
         private static void sendFilesNumber(Socket socketFd, int filesNumber)
         {
-            byte[] filesNumberBytes = BitConverter.GetBytes(filesNumber);
-            byte[] filesNumberSizeBytes = BitConverter.GetBytes(sizeof (int));
+            byte[] filesNumberBytes = Encoding.ASCII.GetBytes(filesNumber.ToString());
+            byte[] filesNumberSizeBytes = BitConverter.GetBytes(filesNumberBytes.Length);
 
-            socketFd.Send(filesNumberSizeBytes, sizeof (int), 0);
-            socketFd.Send(filesNumberBytes, sizeof (int), 0);
+            socketFd.Send(filesNumberSizeBytes, filesNumberSizeBytes.Length, 0);
+            socketFd.Send(filesNumberBytes, filesNumberBytes.Length, 0);
         }
     }
 }
