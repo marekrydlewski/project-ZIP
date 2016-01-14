@@ -79,8 +79,7 @@ void *ServerZip::threadFunction(void *info) {
     std::string str;
 
     std::ifstream t("output.zip");
-    t.seekg(0, std::ios::end);\
-    int lenFile = int(t.tellg());
+    t.seekg(0, std::ios::end);
     std::cout<<"zip size"<<t.tellg() << std::endl;
     str.reserve(t.tellg());
     t.seekg(0, std::ios::beg);
@@ -94,7 +93,7 @@ void *ServerZip::threadFunction(void *info) {
     buffer = new char[length];
     std::copy(str.begin(), str.end(), buffer);
     writeData(_info->connection_fd,  sizeof(length), (void *) (&length));
-    writeData(_info->connection_fd, length, (void *) buffer);
+    writeData(_info->connection_fd, (unsigned int) length, (void *) buffer);
 
     write(1, "Ending connection\n", 18);
     close(_info->connection_fd);
