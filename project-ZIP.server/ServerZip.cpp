@@ -133,8 +133,9 @@ std::string ServerZip::readData(int socket_fd) {
 // we assume that sizeof(length) will return 4 here.
     readXBytes(socket_fd, sizeof(length), (void *) (&length));
     buffer = new char[length];
-    readXBytes(socket_fd, length, (void *) buffer);
 
+    readXBytes(socket_fd, length, (void *) buffer);
+    std::cout<<'Length of read data:'<< length << "read data: " << buffer <<std::endl;
     std::string str = "";
 
     if (buffer)
