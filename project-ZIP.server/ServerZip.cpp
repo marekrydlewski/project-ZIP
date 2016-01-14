@@ -53,9 +53,7 @@ void ServerZip::connect() {
 }
 
 void *ServerZip::threadFunction(void *info) {
-
-    int responseSize;
-
+    
     threadInfo *_info = (threadInfo *) info;
     std::cout<<"Connection from: "<< inet_ntoa(_info->connectionAddress.sin_addr)<<std::endl;
 
