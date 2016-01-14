@@ -45,7 +45,7 @@ void ServerZip::connect() {
         auto *info = new threadInfo();
 
         socklen_t socketAddressSize = sizeof(info->connectionAddress);
-        info->connection_fd = accept(socket_fd, (sockaddr*) &info->connectionAddress, &socketAddressSize);
+        info->connection_fd = accept(socket_fd, (sockaddr *) &info->connectionAddress, &socketAddressSize);
 
         pthread_create(&threadId, NULL, threadFunction, info);
         pthread_detach(threadId);
@@ -55,14 +55,20 @@ void ServerZip::connect() {
 void *ServerZip::threadFunction(void *info) {
 
     threadInfo *_info = (threadInfo *) info;
-    std::cout<<"Connection from: "<< inet_ntoa(_info->connectionAddress.sin_addr)<<std::endl;
+    std::cout << "Connection from: " << inet_ntoa(_info->connectionAddress.sin_addr) << std::endl;
 
     auto path = readData(_info->connection_fd);
     auto file = readData(_info->connection_fd);
-    std::cout<<path<<std::endl;
+    std::cout << path << std::endl;
 
-    ZipArchive archive{"output.zip", ZIP_CREATE};
-    archive.add(Buffer{file}, path);
+    try {
+        ZipArchive archive{"output.zip", ZIP_CREATE};
+        archive.add(Buffer{file}, path);
+    } catch (const std::exception &ex) {
+        std::cerr << ex.what() << std::endl;
+        std::exit(1);
+    }
+
 
     std::string str;
 
@@ -94,17 +100,14 @@ sockaddr_in ServerZip::fillAddress(int portNumber) {
 }
 
 
-void ServerZip::readXBytes(int socket, unsigned int x, void* buffer)
-{
+void ServerZip::readXBytes(int socket, unsigned int x, void *buffer) {
     unsigned int bytesRead = 0;
     int result;
-    while (bytesRead < x)
-    {
+    while (bytesRead < x) {
         result = read(socket, buffer + bytesRead, x - bytesRead);
-        if (result < 1 )
-        {
+        if (result < 1) {
             // Throw error
-            std::cout<<"Oh no problem with reading data!"<<std::endl;
+            std::cout << "Oh no problem with reading data!" << std::endl;
         }
 
         bytesRead += result;
@@ -113,11 +116,11 @@ void ServerZip::readXBytes(int socket, unsigned int x, void* buffer)
 
 std::string ServerZip::readData(int socket_fd) {
     unsigned int length = 0;
-    char* buffer = 0;
+    char *buffer = 0;
 // we assume that sizeof(length) will return 4 here.
-    readXBytes(socket_fd, sizeof(length), (void*)(&length));
+    readXBytes(socket_fd, sizeof(length), (void *) (&length));
     buffer = new char[length];
-    readXBytes(socket_fd, length, (void*)buffer);
+    readXBytes(socket_fd, length, (void *) buffer);
 
     std::string str = "";
 
@@ -127,22 +130,19 @@ std::string ServerZip::readData(int socket_fd) {
         //throw error
     }
 
-    delete [] buffer;
+    delete[] buffer;
     return str;
 }
 
 
-void ServerZip::writeXBytes(int socket, unsigned int x, void* buffer)
-{
+void ServerZip::writeXBytes(int socket, unsigned int x, void *buffer) {
     unsigned int bytesWritten = 0;
     int result;
-    while (bytesWritten < x)
-    {
+    while (bytesWritten < x) {
         result = write(socket, buffer + bytesWritten, x - bytesWritten);
-        if (result < 1 )
-        {
+        if (result < 1) {
             // Throw error
-            std::cout<<"Oh no problem with writing data!"<<std::endl;
+            std::cout << "Oh no problem with writing data!" << std::endl;
         }
 
         bytesWritten += result;
@@ -150,5 +150,5 @@ void ServerZip::writeXBytes(int socket, unsigned int x, void* buffer)
 }
 
 void ServerZip::writeData(int socket_fd, std::string str) {
-    writeXBytes(socket_fd, str.length(), (void*)str.c_str());
+    writeXBytes(socket_fd, str.length(), (void *) str.c_str());
 }

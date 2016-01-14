@@ -9,8 +9,7 @@ int main(int argc, char **argv) {
 	///test
 	ServerZip* server;
 	server = ServerZip::getInstance();
-
-	try {
+try {
 	ZipArchive archive{"output-new.zip", ZIP_CREATE};
 
 	// Add a buffer to the base archive
