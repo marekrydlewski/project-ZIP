@@ -64,7 +64,7 @@ void *ServerZip::threadFunction(void *info) {
 
     int numberOfFiles = std::stoi(readData(_info->connection_fd));
 
-    for (int i=1; i<numberOfFiles; i++){
+    for (int i=0; i<numberOfFiles; i++){
         auto path = readData(_info->connection_fd);
         auto file = readData(_info->connection_fd);
         std::cout << "path: " << path << std::endl;
