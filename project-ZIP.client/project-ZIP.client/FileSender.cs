@@ -41,7 +41,7 @@ namespace project_ZIP.client
                 Handle = handle
             };
 
-            socketFd.BeginSend(file, 0, FileAndSize.BUF_SIZE, 0, new AsyncCallback(SendFileCallback), fas);
+            socketFd.BeginSend(file, 0, FileAndSize.BUF_SIZE, 0, SendFileCallback, fas);
         }
 
         private static void SendFileCallback(IAsyncResult ar)
@@ -59,7 +59,7 @@ namespace project_ZIP.client
             if (fileAndSize.SizeRemaining > 0)
             {
                 socketFd.BeginSend(fileAndSize.File, (fileAndSize.FileSize - fileAndSize.SizeRemaining),
-                    (fileAndSize.SizeRemaining > FileAndSize.BUF_SIZE ? FileAndSize.BUF_SIZE : fileAndSize.SizeRemaining), 0, new AsyncCallback(SendFileCallback), fileAndSize);
+                    (fileAndSize.SizeRemaining > FileAndSize.BUF_SIZE ? FileAndSize.BUF_SIZE : fileAndSize.SizeRemaining), 0, SendFileCallback, fileAndSize);
             }
             else
             {

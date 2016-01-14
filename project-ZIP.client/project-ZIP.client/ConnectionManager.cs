@@ -12,10 +12,10 @@ namespace project_ZIP.client
         {
             var socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-            var endPoint = new IPEndPoint(IPAddress.Parse(IPaddress), Int32.Parse(PORT_NO));
+            var endPoint = new IPEndPoint(IPAddress.Parse(IPaddress), int.Parse(PORT_NO));
 
             /* connect to the server */
-            socketFd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback), socketFd);
+            socketFd.BeginConnect(endPoint, ConnectCallback, socketFd);
         }
 
         public static void DNSConnect(string hostName, string PORT_NO)
@@ -27,7 +27,7 @@ namespace project_ZIP.client
         {
             try
             {
-                string PORT_NO = (string) ar.AsyncState;
+                var PORT_NO = (string) ar.AsyncState;
 
                 /* complete the DNS query */
                 var hostEntry = Dns.EndGetHostEntry(ar);
@@ -37,10 +37,10 @@ namespace project_ZIP.client
                 var socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                 /* remote endpoint for the socket */
-                var endPoint = new IPEndPoint(addresses[0], Int32.Parse(PORT_NO));
+                var endPoint = new IPEndPoint(addresses[0], int.Parse(PORT_NO));
 
                 /* connect to the server */
-                socketFd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback), socketFd);
+                socketFd.BeginConnect(endPoint, ConnectCallback, socketFd);
             }
             catch (Exception exc)
             {
@@ -59,7 +59,7 @@ namespace project_ZIP.client
                 socketFd.EndConnect(ar);
 
                 ProjectZip window = (ProjectZip)Application.OpenForms[0];
-                window.setControls(false);
+                window.SetControls(false);
 
                 //handle for threads control
                 ManualResetEvent sendHandle = new ManualResetEvent(false);

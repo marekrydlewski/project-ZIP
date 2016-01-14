@@ -19,11 +19,11 @@ namespace project_ZIP.client
             _window = this;
         }
 
-        public void setIPTextBox(string text)
+        public void SetIPTextBox(string text)
         {
             if (IPTextBox.InvokeRequired)
             {
-                setIPTextBoxCallback IPTextBoxCallback = setIPTextBox;
+                setIPTextBoxCallback IPTextBoxCallback = SetIPTextBox;
                 _window.Invoke(IPTextBoxCallback, text);
             }
             else
@@ -33,11 +33,11 @@ namespace project_ZIP.client
         }
 
         //set controls on form to enabled/disabled
-        public void setControls(bool state)
+        public void SetControls(bool state)
         {
             if (IPTextBox.InvokeRequired || FileSelectButton.InvokeRequired || FileSelectTextBox.InvokeRequired)
             {
-                setControlsCallback controlsCallback = setControls;
+                setControlsCallback controlsCallback = SetControls;
                 _window.Invoke(controlsCallback, state);
             }
             else
@@ -64,7 +64,7 @@ namespace project_ZIP.client
             }
             else
             {
-                MessageBox.Show("IP address empty");
+                MessageBox.Show(@"IP address empty");
             }
         }
 

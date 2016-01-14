@@ -9,7 +9,7 @@ namespace project_ZIP.client
 
         public enum FileReceiveStatus
         {
-            OK, ERROR
+            Ok, Error
         }
 
         public static FileReceiveStatus FileReceive(Socket socketFd)
@@ -26,9 +26,9 @@ namespace project_ZIP.client
                 SocketFd = socketFd
             };
 
-            socketFd.BeginReceive(fas.Buffer, 0, FileAndSize.BUF_SIZE, 0,  new AsyncCallback(FileReceiveCallback), fas);
+            socketFd.BeginReceive(fas.Buffer, 0, FileAndSize.BUF_SIZE, 0,  FileReceiveCallback, fas);
 
-            return FileReceiveStatus.OK;
+            return FileReceiveStatus.Ok;
         }
 
         private static void FileReceiveCallback(IAsyncResult ar)
@@ -45,13 +45,13 @@ namespace project_ZIP.client
             if (fileAndSize.SizeRemaining > 0)
             {
                 socketFd.BeginReceive(fileAndSize.Buffer, 0, FileAndSize.BUF_SIZE, 0,
-                    new AsyncCallback(FileReceiveCallback), fileAndSize);
+                    FileReceiveCallback, fileAndSize);
             }
             else
             {
                 ProjectZip window = (ProjectZip) Application.OpenForms[0];
-                window.setControls(true);
-                window.setIPTextBox("");
+                window.SetControls(true);
+                window.SetIPTextBox("");
 
                 //send file back to form
                 window.DownloadFile(fileAndSize.File);
