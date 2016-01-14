@@ -63,22 +63,34 @@ void *ServerZip::threadFunction(void *info) {
     std::cout << "Connection from: " << inet_ntoa(_info->connectionAddress.sin_addr) << std::endl;
 
     int numberOfFiles = (readData(_info->connection_fd);
-    {
+
+    auto path = readData(_info->connection_fd);
+    auto file = readData(_info->connection_fd);
+    std::cout << "path: " << path << std::endl;
+    std::cout << "file size: "<< file.length() << std::endl;
+    try {
         ZipArchive archive{"output.zip", ZIP_CREATE};
-        for (int i=0; i<numberOfFiles; i++){
-            auto path = readData(_info->connection_fd);
-            auto file = readData(_info->connection_fd);
-            std::cout << "path: " << path << std::endl;
-            std::cout << "file size: "<< file.length() << std::endl;
-            try {
-                archive.add(Buffer{file}, path);
-            } catch (const std::exception &ex) {
-                std::cerr << ex.what() << std::endl;
-                std::exit(1);
-            }
+        archive.add(Buffer{file}, path);
+    } catch (const std::exception &ex) {
+        std::cerr << ex.what() << std::endl;
+        std::exit(1);
+    }
+
+    for (int i=1; i<numberOfFiles; i++){
+        auto path = readData(_info->connection_fd);
+        auto file = readData(_info->connection_fd);
+        std::cout << "path: " << path << std::endl;
+        std::cout << "file size: "<< file.length() << std::endl;
+        try {
+            ZipArchive archive{"output.zip"};
+            archive.add(Buffer{file}, path);
+        } catch (const std::exception &ex) {
+            std::cerr << ex.what() << std::endl;
+            std::exit(1);
         }
     }
-    
+
+
     std::string str;
     std::ifstream t("output.zip");
     t.seekg(0, std::ios::end);
