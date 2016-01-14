@@ -9,6 +9,10 @@ int ServerZip::socket_fd = -1;
 void ServerZip::signalHandler(int signal) {
     close(socket_fd);
     std::cout << "ServerZip: Caught signal " << signal << " , coming out...\n" << std::endl;
+    std::remove("output.zip");
+    if(!std::ifstream("output.zip")) std::perror("Error opening deleted file");
+    else std::cout<<"Removed archive"<<std::endl;
+
     exit(0);
 };
 
@@ -127,7 +131,7 @@ std::string ServerZip::readData(int socket_fd) {
     std::string str = "";
 
     if (buffer)
-        str = std::string(buffer);
+        str = std::string(buffer, length);
     else {
         //throw error
     }
