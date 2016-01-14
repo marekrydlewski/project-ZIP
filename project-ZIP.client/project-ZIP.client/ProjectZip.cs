@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Net;
-using System.Net.Sockets;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace project_ZIP.client
@@ -22,7 +19,7 @@ namespace project_ZIP.client
             _window = this;
         }
 
-        private void setIPTextBox(string text)
+        public void setIPTextBox(string text)
         {
             if (IPTextBox.InvokeRequired)
             {
@@ -51,72 +48,17 @@ namespace project_ZIP.client
             }
         }
 
-        private void ConnectCallback(IAsyncResult ar)
-        {
-            try
-            {
-                /* retrieve the socket from the state object */
-                Socket socketFd = (Socket)ar.AsyncState;
-
-                /* complete the connection */
-                socketFd.EndConnect(ar);
-
-                setControls(false);
-                ManualResetEvent sendHandle = new ManualResetEvent(false);
-                //DirectorySender.SendDirectory(FileSelectTextBox.Text, socketFd, sendHandle);
-                FileSender.SendFile("C:\\Users\\jablo\\OneDrive\\Dokumenty\\cv.pdf", socketFd, sendHandle);
-                sendHandle.WaitOne();
-                FileReceiver.FileReceive(socketFd);
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show("Exception:\t\n" + exc.Message);
-            }
-        }
-
-        private void GetHostEntryCallback(IAsyncResult ar)
-        {
-            try
-            {
-                /* complete the DNS query */
-                var hostEntry = Dns.EndGetHostEntry(ar);
-                var addresses = hostEntry.AddressList;
-
-                /* create a socket */
-                var socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-                /* remote endpoint for the socket */
-                var endPoint = new IPEndPoint(addresses[0], Int32.Parse(PORT_NO));
-
-                setIPTextBox("");
-
-                /* connect to the server */
-                socketFd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback), socketFd);
-            }
-            catch (Exception exc)
-            {
-                MessageBox.Show("Exception:\t\n" + exc.Message);
-            }
-        }
-
         private void CompressButton_Click(object sender, EventArgs e)
         {
             if (IPTextBox.Text.Length > 0)
             {
                 if (Regex.Match(IPTextBox.Text, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}").Success)
                 {
-                    var socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-                    var endPoint = new IPEndPoint(IPAddress.Parse(IPTextBox.Text), Int32.Parse(PORT_NO));
-
-                    setIPTextBox("");
-
-                    /* connect to the server */
-                    socketFd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback), socketFd);
+                    ConnectionManager.SimpleConnect(IPTextBox.Text, PORT_NO);
                 }
                 else
                 {
-                    Dns.BeginGetHostEntry(IPTextBox.Text, GetHostEntryCallback, null);
+                    ConnectionManager.DNSConnect(IPTextBox.Text, PORT_NO);
                 }         
             }
             else
@@ -135,14 +77,15 @@ namespace project_ZIP.client
 
         public void DownloadFile(byte[] fileBytes)
         {
-            
-            {
-                Invoke((Action)(() => { FileSaveDialog.ShowDialog(); }));
-                var myStream = FileSaveDialog.OpenFile();
-                myStream.Write(fileBytes, 0, fileBytes.Length);
-                myStream.Close();
-            }
+            Invoke((Action)(() => { FileSaveDialog.ShowDialog(); }));
+            var myStream = FileSaveDialog.OpenFile();
+            myStream.Write(fileBytes, 0, fileBytes.Length);
+            myStream.Close();
+        }
 
+        public string FileSelectTextBoxText()
+        {
+            return FileSelectTextBox.Text;
         }
     }
 }

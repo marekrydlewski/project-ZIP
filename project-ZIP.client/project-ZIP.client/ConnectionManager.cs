@@ -1,0 +1,75 @@
+﻿using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using System.Windows.Forms;
+
+namespace project_ZIP.client
+{
+    public class ConnectionManager
+    {
+        public static void SimpleConnect(string IPaddress, string PORT_NO)
+        {
+            var socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            var endPoint = new IPEndPoint(IPAddress.Parse(IPaddress), Int32.Parse(PORT_NO));
+
+            /* connect to the server */
+            socketFd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback), socketFd);
+        }
+
+        public static void DNSConnect(string hostName, string PORT_NO)
+        {
+            Dns.BeginGetHostEntry(hostName, GetHostEntryCallback, PORT_NO);
+        }
+
+        private static void GetHostEntryCallback(IAsyncResult ar)
+        {
+            try
+            {
+                string PORT_NO = (string) ar.AsyncState;
+                /* complete the DNS query */
+                var hostEntry = Dns.EndGetHostEntry(ar);
+                var addresses = hostEntry.AddressList;
+
+                /* create a socket */
+                var socketFd = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                /* remote endpoint for the socket */
+                var endPoint = new IPEndPoint(addresses[0], Int32.Parse(PORT_NO));
+
+                /* connect to the server */
+                socketFd.BeginConnect(endPoint, new AsyncCallback(ConnectCallback), socketFd);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Exception:\t\n" + exc.Message);
+            }
+        }
+
+        private static void ConnectCallback(IAsyncResult ar)
+        {
+            try
+            {
+                /* retrieve the socket from the state object */
+                Socket socketFd = (Socket)ar.AsyncState;
+
+                /* complete the connection */
+                socketFd.EndConnect(ar);
+
+                ProjectZip window = (ProjectZip)Application.OpenForms[0];
+                window.setControls(false);
+
+                ManualResetEvent sendHandle = new ManualResetEvent(false);
+                DirectorySender.SendDirectory("C:\\Users\\jablo\\OneDrive\\Dokumenty", socketFd, sendHandle);
+                //DirectorySender.SendDirectory(window.FileSelectTextBoxText(), socketFd, sendHandle);
+                sendHandle.WaitOne();
+                FileReceiver.FileReceive(socketFd);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Exception:\t\n" + exc.Message);
+            }
+        }
+    }
+}

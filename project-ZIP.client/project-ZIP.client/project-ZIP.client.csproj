@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConnectionManager.cs" />
     <Compile Include="DirectorySender.cs" />
     <Compile Include="FileAndSize.cs" />
     <Compile Include="FileReceiver.cs" />
