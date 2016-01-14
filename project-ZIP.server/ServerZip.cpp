@@ -7,10 +7,11 @@ using namespace source;
 int ServerZip::socket_fd = -1;
 
 void ServerZip::signalHandler(int signal) {
-    close(socket_fd);
     std::cout << "ServerZip: Caught signal " << signal << " , coming out...\n" << std::endl;
+
+    close(socket_fd);
     std::remove("output.zip");
-    if(!std::ifstream("output.zip")) std::perror("Error opening deleted file");
+    if(std::ifstream("output.zip")) std::perror("Error opening deleted file");
     else std::cout<<"Removed archive"<<std::endl;
 
     exit(0);
@@ -78,7 +79,8 @@ void *ServerZip::threadFunction(void *info) {
     std::string str;
 
     std::ifstream t("output.zip");
-    t.seekg(0, std::ios::end);
+    t.seekg(0, std::ios::end);\
+    int lenFile = int(t.tellg());
     std::cout<<"zip size"<<t.tellg() << std::endl;
     str.reserve(t.tellg());
     t.seekg(0, std::ios::beg);
@@ -86,8 +88,13 @@ void *ServerZip::threadFunction(void *info) {
     str.assign((std::istreambuf_iterator<char>(t)),
                std::istreambuf_iterator<char>());
 
-    writeData(_info->connection_fd, std::to_string(str.length()));
-    writeData(_info->connection_fd, str);
+
+    char *buffer = 0;
+    int length = (int)str.length();
+    buffer = new char[length];
+    std::copy(str.begin(), str.end(), buffer);
+    writeData(_info->connection_fd,  sizeof(length), (void *) (&length));
+    writeData(_info->connection_fd, length, (void *) buffer);
 
     write(1, "Ending connection\n", 18);
     close(_info->connection_fd);
@@ -155,6 +162,6 @@ void ServerZip::writeXBytes(int socket, unsigned int x, void *buffer) {
     }
 }
 
-void ServerZip::writeData(int socket_fd, std::string str) {
-    writeXBytes(socket_fd, str.length(), (void *) str.c_str());
+void ServerZip::writeData(int socket_fd, unsigned int x, void *buffer) {
+    writeXBytes(socket_fd, x, buffer);
 }
