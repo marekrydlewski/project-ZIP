@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using System.Threading;
 
 namespace project_ZIP.client
 {
@@ -10,5 +11,6 @@ namespace project_ZIP.client
         public byte[] Buffer = new byte[BUF_SIZE];
         public Socket SocketFd = null;
         public const int BUF_SIZE = 1024;
+        public ManualResetEvent Handle = null;
     }
 }

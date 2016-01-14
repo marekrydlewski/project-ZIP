@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace project_ZIP.client
@@ -100,9 +101,10 @@ namespace project_ZIP.client
                 socketFd.EndConnect(ar);
 
                 setControls(false);
-
-                DirectorySender.SendDirectory(FileSelectTextBox.Text, socketFd);
-
+                ManualResetEvent sendHandle = new ManualResetEvent(false);
+                //DirectorySender.SendDirectory(FileSelectTextBox.Text, socketFd, sendHandle);
+                FileSender.SendFile("C:\\Users\\jablo\\OneDrive\\Dokumenty\\cv.pdf", socketFd, sendHandle);
+                sendHandle.WaitOne();
                 FileReceiver.FileReceive(socketFd);
             }
             catch (Exception exc)
@@ -172,13 +174,15 @@ namespace project_ZIP.client
 
         public void DownloadFile(byte[] fileBytes)
         {
-            if (FileSaveDialog.ShowDialog() == DialogResult.OK)
+            
             {
+                Invoke((Action)(() => { FileSaveDialog.ShowDialog(); }));
                 var myStream = FileSaveDialog.OpenFile();
                 myStream.Write(fileBytes, 0, fileBytes.Length);
                 myStream.Close();
             }
 
         }
+
     }
 }

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace project_ZIP.client
 {
@@ -12,7 +13,7 @@ namespace project_ZIP.client
             Ok, Error
         }
 
-        public static void SendFile(string path, Socket socketFd)
+        public static void SendFile(string path, Socket socketFd, ManualResetEvent handle)
         {
             //send File name
             byte[] pathBytes = Encoding.ASCII.GetBytes(Path.GetFileName(path));
@@ -38,7 +39,8 @@ namespace project_ZIP.client
                 SocketFd = socketFd,
                 File = file,
                 FileSize = file.Length,
-                SizeRemaining = file.Length
+                SizeRemaining = file.Length,
+                Handle = handle
             };
 
             socketFd.BeginSend(file, 0, FileAndSize.BUF_SIZE, 0, new AsyncCallback(SendFileCallback), fas);
@@ -49,6 +51,9 @@ namespace project_ZIP.client
             FileAndSize fileAndSize = (FileAndSize) ar.AsyncState;
 
             Socket socketFd = fileAndSize.SocketFd;
+
+            ManualResetEvent handle = fileAndSize.Handle;
+
             int bytesSent = socketFd.EndSend(ar);
 
             fileAndSize.SizeRemaining -= bytesSent;
@@ -57,6 +62,10 @@ namespace project_ZIP.client
             {
                 socketFd.BeginSend(fileAndSize.File, (fileAndSize.FileSize - fileAndSize.SizeRemaining),
                     (fileAndSize.SizeRemaining > FileAndSize.BUF_SIZE ? FileAndSize.BUF_SIZE : fileAndSize.SizeRemaining), 0, new AsyncCallback(SendFileCallback), fileAndSize);
+            }
+            else
+            {
+                handle.Set();
             }
         }
     }

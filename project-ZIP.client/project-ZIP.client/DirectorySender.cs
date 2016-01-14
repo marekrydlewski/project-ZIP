@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace project_ZIP.client
 {
@@ -11,7 +12,7 @@ namespace project_ZIP.client
             Ok, Error
         }
 
-        public static SendDirectoryStatus SendDirectory(string path, Socket socketFd, string parentDirectory = "")
+        public static SendDirectoryStatus SendDirectory(string path, Socket socketFd, ManualResetEvent handle, string parentDirectory = "")
         {
             string dirName = Path.Combine(parentDirectory, Path.GetFileName(path));
 
@@ -20,14 +21,20 @@ namespace project_ZIP.client
 
             foreach (var filePath in files)
             { 
-                FileSender.SendFile(filePath, socketFd);
+                ManualResetEvent fileHandle = new ManualResetEvent(false);
+                FileSender.SendFile(filePath, socketFd, fileHandle);
+                fileHandle.WaitOne();
             }
 
-            if (subdirectories.Any(subdirectoryPath => SendDirectory(subdirectoryPath, socketFd, dirName) == SendDirectoryStatus.Error))
+            foreach (var subdirectory in subdirectories)
             {
-                return SendDirectoryStatus.Error;
+                ManualResetEvent myHandle = new ManualResetEvent(false);
+                var status = SendDirectory(subdirectory, socketFd, myHandle, dirName);
+                myHandle.WaitOne();
+                if (status == SendDirectoryStatus.Error) return status;
             }
 
+            handle.Set();
             return SendDirectoryStatus.Ok;
         }
     }
