@@ -62,7 +62,7 @@ void *ServerZip::threadFunction(void *info) {
     threadInfo *_info = (threadInfo *) info;
     std::cout << "Connection from: " << inet_ntoa(_info->connectionAddress.sin_addr) << std::endl;
 
-    auto numberOfFiles = std::stoi(readData(_info->connection_fd));
+    int numberOfFiles = std::stoi(readData(_info->connection_fd));
 
     ZipArchive archive{"output.zip", ZIP_CREATE};
     for (int i=0; i<numberOfFiles; i++){
