@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
@@ -14,6 +15,8 @@ namespace project_ZIP.client
 
         public static SendDirectoryStatus SendDirectory(string path, Socket socketFd, ManualResetEvent handle, string parentDirectory = "")
         {
+            if(parentDirectory == "") sendFilesNumber(socketFd, Directory.GetFiles(path, "*", SearchOption.AllDirectories).Length);
+
             string dirName = Path.Combine(parentDirectory, Path.GetFileName(path));
 
             string[] files = Directory.GetFiles(path);
@@ -36,6 +39,13 @@ namespace project_ZIP.client
 
             handle.Set();
             return SendDirectoryStatus.Ok;
+        }
+
+        private static void sendFilesNumber(Socket socketFd, int filesNumber)
+        {
+            byte[] filesNumberBytes = BitConverter.GetBytes(filesNumber);
+
+            socketFd.Send(filesNumberBytes, sizeof(int), 0);
         }
     }
 }
