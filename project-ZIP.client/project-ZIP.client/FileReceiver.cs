@@ -15,12 +15,12 @@ namespace project_ZIP.client
         public static FileReceiveStatus FileReceive(Socket socketFd)
         {
             //receive File size
-            byte[] sizeBytes = new byte[sizeof(int)];
+            var sizeBytes = new byte[sizeof(int)];
             socketFd.Receive(sizeBytes, sizeBytes.Length, 0);
-            int size = BitConverter.ToInt32(sizeBytes, 0);
+            var size = BitConverter.ToInt32(sizeBytes, 0);
 
             //receive File
-            FileAndSize fas = new FileAndSize
+            var fas = new FileAndSize
             {
                 SizeRemaining = size,
                 SocketFd = socketFd
@@ -33,10 +33,10 @@ namespace project_ZIP.client
 
         private static void FileReceiveCallback(IAsyncResult ar)
         {
-            FileAndSize fileAndSize = (FileAndSize) ar.AsyncState;
-            Socket socketFd = fileAndSize.SocketFd;
+            var fileAndSize = (FileAndSize) ar.AsyncState;
+            var socketFd = fileAndSize.SocketFd;
 
-            int bytesReceived = fileAndSize.SocketFd.EndReceive(ar);
+            var bytesReceived = fileAndSize.SocketFd.EndReceive(ar);
 
             fileAndSize.SizeRemaining -= bytesReceived;
 
@@ -49,7 +49,7 @@ namespace project_ZIP.client
             }
             else
             {
-                ProjectZip window = (ProjectZip) Application.OpenForms[0];
+                var window = (ProjectZip) Application.OpenForms[0];
                 window.SetControls(true);
                 window.SetIPTextBox("");
 
@@ -64,7 +64,7 @@ namespace project_ZIP.client
         //method for combining two byte arrays
         private static byte[] Combine(byte[] first, byte[] second)
         {
-            byte[] ret = new byte[first.Length + second.Length];
+            var ret = new byte[first.Length + second.Length];
             Buffer.BlockCopy(first, 0, ret, 0, first.Length);
             Buffer.BlockCopy(second, 0, ret, first.Length, second.Length);
             return ret;

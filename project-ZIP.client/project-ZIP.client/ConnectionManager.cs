@@ -53,16 +53,16 @@ namespace project_ZIP.client
             try
             {
                 /* retrieve the socket from the state object */
-                Socket socketFd = (Socket)ar.AsyncState;
+                var socketFd = (Socket)ar.AsyncState;
 
                 /* complete the connection */
                 socketFd.EndConnect(ar);
 
-                ProjectZip window = (ProjectZip)Application.OpenForms[0];
+                var window = (ProjectZip)Application.OpenForms[0];
                 window.SetControls(false);
 
                 //handle for threads control
-                ManualResetEvent sendHandle = new ManualResetEvent(false);
+                var sendHandle = new ManualResetEvent(false);
 
                 //send directory, wait for finished sending, then receive compressed file
                 DirectorySender.SendDirectory(window.FileSelectTextBoxText(), socketFd, sendHandle);

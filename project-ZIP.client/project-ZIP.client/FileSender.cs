@@ -16,25 +16,25 @@ namespace project_ZIP.client
         public static void SendFile(string path, string parentDirectory, Socket socketFd, ManualResetEvent handle)
         {
             //send File name
-            string filePath = Path.Combine(parentDirectory, Path.GetFileName(path));
+            var filePath = Path.Combine(parentDirectory, Path.GetFileName(path));
             filePath = filePath.Replace('\\', '/');
-            byte[] pathBytes = Encoding.ASCII.GetBytes(filePath);
+            var pathBytes = Encoding.ASCII.GetBytes(filePath);
 
-            byte[] pathSizeBytes = BitConverter.GetBytes(pathBytes.Length);
+            var pathSizeBytes = BitConverter.GetBytes(pathBytes.Length);
 
             socketFd.Send(pathSizeBytes, pathSizeBytes.Length, 0);
 
             socketFd.Send(pathBytes, pathBytes.Length, 0);
 
             //send File size
-            byte[] file = File.ReadAllBytes(path);
+            var file = File.ReadAllBytes(path);
 
-            byte[] fileSizeBytes = BitConverter.GetBytes(file.Length);
+            var fileSizeBytes = BitConverter.GetBytes(file.Length);
 
             socketFd.Send(fileSizeBytes, fileSizeBytes.Length, 0);
 
             //send File
-            FileAndSize fas = new FileAndSize
+            var fas = new FileAndSize
             {
                 SocketFd = socketFd,
                 File = file,
@@ -48,13 +48,13 @@ namespace project_ZIP.client
 
         private static void SendFileCallback(IAsyncResult ar)
         {
-            FileAndSize fileAndSize = (FileAndSize) ar.AsyncState;
+            var fileAndSize = (FileAndSize) ar.AsyncState;
 
-            Socket socketFd = fileAndSize.SocketFd;
+            var socketFd = fileAndSize.SocketFd;
 
-            ManualResetEvent handle = fileAndSize.Handle;
+            var handle = fileAndSize.Handle;
 
-            int bytesSent = socketFd.EndSend(ar);
+            var bytesSent = socketFd.EndSend(ar);
 
             fileAndSize.SizeRemaining -= bytesSent;
 

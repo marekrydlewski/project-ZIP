@@ -19,15 +19,15 @@ namespace project_ZIP.client
             if(parentDirectory == "") sendFilesNumber(socketFd, Directory.GetFiles(path, "*", SearchOption.AllDirectories).Length);
 
             //combine parent directory path and current directory path to get full path
-            string dirName = Path.Combine(parentDirectory, Path.GetFileName(path));
+            var dirName = Path.Combine(parentDirectory, Path.GetFileName(path));
 
             //get all files and subdirectories in current directory
-            string[] files = Directory.GetFiles(path);
-            string[] subdirectories = Directory.GetDirectories(path);
+            var files = Directory.GetFiles(path);
+            var subdirectories = Directory.GetDirectories(path);
 
             foreach (var filePath in files)
             { 
-                ManualResetEvent fileHandle = new ManualResetEvent(false);
+                var fileHandle = new ManualResetEvent(false);
 
                 FileSender.SendFile(filePath, dirName, socketFd, fileHandle);
 
@@ -36,7 +36,7 @@ namespace project_ZIP.client
 
             foreach (var subdirectory in subdirectories)
             {
-                ManualResetEvent subdirectoryHandle = new ManualResetEvent(false);
+                var subdirectoryHandle = new ManualResetEvent(false);
 
                 var status = SendDirectory(subdirectory, socketFd, subdirectoryHandle, dirName);
 
@@ -51,8 +51,8 @@ namespace project_ZIP.client
 
         private static void sendFilesNumber(Socket socketFd, int filesNumber)
         {
-            byte[] filesNumberBytes = Encoding.ASCII.GetBytes(filesNumber.ToString());
-            byte[] filesNumberSizeBytes = BitConverter.GetBytes(filesNumberBytes.Length);
+            var filesNumberBytes = Encoding.ASCII.GetBytes(filesNumber.ToString());
+            var filesNumberSizeBytes = BitConverter.GetBytes(filesNumberBytes.Length);
 
             socketFd.Send(filesNumberSizeBytes, filesNumberSizeBytes.Length, 0);
             socketFd.Send(filesNumberBytes, filesNumberBytes.Length, 0);
