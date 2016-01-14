@@ -90,6 +90,11 @@
             this.FileSelectLabel.TabIndex = 6;
             this.FileSelectLabel.Text = "Select folder you want to compress:";
             // 
+            // FileSaveDialog
+            // 
+            this.FileSaveDialog.DefaultExt = "zip";
+            this.FileSaveDialog.FileName = "compressed";
+            // 
             // ProjectZip
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
