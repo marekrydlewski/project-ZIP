@@ -60,6 +60,7 @@ void *ServerZip::threadFunction(void *info) {
     auto path = readData(_info->connection_fd);
     auto file = readData(_info->connection_fd);
     std::cout << path << std::endl;
+    std::cout << "file size "<< file.length() << std::endl;
 
     try {
         ZipArchive archive{"output.zip", ZIP_CREATE};
@@ -74,6 +75,7 @@ void *ServerZip::threadFunction(void *info) {
 
     std::ifstream t("output.zip");
     t.seekg(0, std::ios::end);
+    std::cout<<"zip size"<<t.tellg() << std::endl;
     str.reserve(t.tellg());
     t.seekg(0, std::ios::beg);
 

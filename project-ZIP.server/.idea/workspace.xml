@@ -12,10 +12,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d6e9aee-9ace-4b79-bbc9-b0f0c1fe484f" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/mydata.zip" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output-new.zip" afterPath="$PROJECT_DIR$/output-new.zip" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ServerZip.cpp" afterPath="$PROJECT_DIR$/ServerZip.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.sh" afterPath="$PROJECT_DIR$/build.sh" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project-ZIP.server.cpp" afterPath="$PROJECT_DIR$/project-ZIP.server.cpp" />
     </list>
     <ignored path="project-ZIP.server.iws" />
@@ -40,8 +38,8 @@
       <file leaf-file-name="project-ZIP.server.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/project-ZIP.server.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-13.034483">
-              <caret line="21" column="6" selection-start-line="19" selection-start-column="0" selection-end-line="22" selection-end-column="1" />
+            <state vertical-scroll-proportion="-17.37931">
+              <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
               <folding>
                 <element signature="e#1#17#0" expanded="true" />
               </folding>
@@ -52,8 +50,8 @@
       <file leaf-file-name="ServerZip.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ServerZip.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.67814857">
-              <caret line="65" column="40" selection-start-line="65" selection-start-column="40" selection-end-line="65" selection-end-column="40" />
+            <state vertical-scroll-proportion="0.27125943">
+              <caret line="62" column="31" selection-start-line="62" selection-start-column="31" selection-end-line="62" selection-end-column="31" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -430,6 +428,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4502447">
           <caret line="21" column="10" selection-start-line="21" selection-start-column="10" selection-end-line="21" selection-end-column="10" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -453,8 +452,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/project-ZIP.server.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.034483">
-          <caret line="21" column="6" selection-start-line="19" selection-start-column="0" selection-end-line="22" selection-end-column="1" />
+        <state vertical-scroll-proportion="-17.37931">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding>
             <element signature="e#1#17#0" expanded="true" />
           </folding>
@@ -463,8 +462,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ServerZip.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.67814857">
-          <caret line="65" column="40" selection-start-line="65" selection-start-column="40" selection-end-line="65" selection-end-column="40" />
+        <state vertical-scroll-proportion="0.27125943">
+          <caret line="62" column="31" selection-start-line="62" selection-start-column="31" selection-end-line="62" selection-end-column="31" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

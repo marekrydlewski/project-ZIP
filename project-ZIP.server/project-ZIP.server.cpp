@@ -17,6 +17,7 @@ try {
 
 	// Add a file with all its contents to the directory assets/ in the archive
 	archive.addDirectory("assets");
+	archive.add(File{"test.pdf"}, "assets/documentFromFile");
 } catch (const std::exception &ex) {
 	std::cerr << ex.what() << std::endl;
 	std::exit(1);
