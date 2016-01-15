@@ -51,7 +51,7 @@ namespace project_ZIP.client
             {
                 var window = (ProjectZip) Application.OpenForms[0];
                 window.SetControls(true);
-                window.SetIPTextBox("");
+                window.SetFileSelectTextBox("");
 
                 //send file back to form
                 window.DownloadFile(fileAndSize.File);
