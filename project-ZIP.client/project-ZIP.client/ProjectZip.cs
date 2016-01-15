@@ -12,6 +12,8 @@ namespace project_ZIP.client
         private delegate void setIPTextBoxCallback(string text);
 
         private delegate void setControlsCallback(bool state);
+
+        private delegate void setFileSelectTextBoxCallback(string text);
  
         public ProjectZip()
         {
@@ -29,6 +31,20 @@ namespace project_ZIP.client
             else
             {
                 IPTextBox.Text = text;
+            }
+        }
+
+        //set file select text box
+        public void SetFileSelectTextBox(string text)
+        {
+            if (FileSelectTextBox.InvokeRequired)
+            {
+                setFileSelectTextBoxCallback FileSelectTextBoxCallback = SetFileSelectTextBox;
+                _window.Invoke(FileSelectTextBoxCallback, text);
+            }
+            else
+            {
+                FileSelectTextBox.Text = text;
             }
         }
 
@@ -51,7 +67,7 @@ namespace project_ZIP.client
 
         private void CompressButton_Click(object sender, EventArgs e)
         {
-            if (IPTextBox.Text.Length > 0)
+            if (IPTextBox.Text.Length > 0 && FileSelectTextBox.Text.Length > 0)
             {
                 if (Regex.Match(IPTextBox.Text, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}").Success)
                 {
@@ -62,9 +78,13 @@ namespace project_ZIP.client
                     ConnectionManager.DNSConnect(IPTextBox.Text, PORT_NO);
                 }         
             }
-            else
+            else if(IPTextBox.Text.Length == 0)
             {
                 MessageBox.Show(@"IP address empty");
+            }
+            else
+            {
+                MessageBox.Show(@"No directory selected");
             }
         }
 

@@ -94,6 +94,7 @@
             // 
             this.FileSaveDialog.DefaultExt = "zip";
             this.FileSaveDialog.FileName = "compressed";
+            this.FileSaveDialog.Filter = "ZIP archive (*.zip)|*.zip";
             // 
             // ProjectZip
             // 
