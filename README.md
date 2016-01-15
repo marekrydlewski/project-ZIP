@@ -1,4 +1,4 @@
-# Remote compression tool written in C++/C#
+# Remote compression tool written in C++/C# #
 
 ## Server
 build and run:

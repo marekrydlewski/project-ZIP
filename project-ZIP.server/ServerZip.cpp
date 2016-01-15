@@ -3,6 +3,7 @@
 #include "ZipArchive.h"
 
 using namespace source;
+
 //Static values must be init
 int ServerZip::socket_fd = -1;
 
@@ -19,7 +20,6 @@ ServerZip *ServerZip::m_pInstance = nullptr;
 ServerZip *ServerZip::getInstance() {
     if (!m_pInstance)
         m_pInstance = new ServerZip;
-
     return m_pInstance;
 }
 
@@ -28,14 +28,10 @@ void ServerZip::connect() {
     signal(SIGINT, this->signalHandler);
 
     socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-
     setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on));
     sockaddr_in socketAddress = this->fillAddress(1234);
-
     bind(socket_fd, (sockaddr * ) & socketAddress, sizeof(socketAddress));
-
     listen(socket_fd, backlog);
-
 
     while (1) {
         pthread_t threadId;
@@ -89,7 +85,7 @@ void *ServerZip::threadFunction(void *info) {
     std::copy(str.begin(), str.end(), buffer);
     writeData(_info->connection_fd, length, buffer);
 
-    write(1, "Ending connection\n", 18);
+    std::cout<<"Ending connection"<<std::endl;
     close(_info->connection_fd);
     free(_info);
 
@@ -148,11 +144,10 @@ void ServerZip::writeXBytes(int socket, unsigned int x, void *buffer) {
         }
 
         bytesWritten += result;
-        std::cout << "Written: " << bytesWritten << " to " << socket << std::endl;
     }
 }
 
 void ServerZip::writeData(int socket_fd, int x, void *buffer) {
     writeXBytes(socket_fd, sizeof(x), (void *) &x);
-    writeXBytes(socket_fd, (unsigned int) x, (void *) buffer);
+    writeXBytes(socket_fd, (unsigned int) x, buffer);
 }
