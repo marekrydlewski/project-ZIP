@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace project_ZIP.client
 {
@@ -51,11 +52,20 @@ namespace project_ZIP.client
 
         private static void sendFilesNumber(Socket socketFd, int filesNumber)
         {
-            var filesNumberBytes = Encoding.ASCII.GetBytes(filesNumber.ToString());
-            var filesNumberSizeBytes = BitConverter.GetBytes(filesNumberBytes.Length);
+            try
+            {
+                var filesNumberBytes = Encoding.ASCII.GetBytes(filesNumber.ToString());
+                var filesNumberSizeBytes = BitConverter.GetBytes(filesNumberBytes.Length);
 
-            socketFd.Send(filesNumberSizeBytes, filesNumberSizeBytes.Length, 0);
-            socketFd.Send(filesNumberBytes, filesNumberBytes.Length, 0);
+                socketFd.Send(filesNumberSizeBytes, filesNumberSizeBytes.Length, 0);
+                socketFd.Send(filesNumberBytes, filesNumberBytes.Length, 0);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Exception:\t\n" + exc.Message);
+                var window = (ProjectZip)Application.OpenForms[0];
+                window.SetControls(true);
+            }
         }
     }
 }

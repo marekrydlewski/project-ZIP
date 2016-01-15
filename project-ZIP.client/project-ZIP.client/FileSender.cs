@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace project_ZIP.client
 {
@@ -22,16 +23,34 @@ namespace project_ZIP.client
 
             var pathSizeBytes = BitConverter.GetBytes(pathBytes.Length);
 
-            socketFd.Send(pathSizeBytes, pathSizeBytes.Length, 0);
+            try
+            {
+                socketFd.Send(pathSizeBytes, pathSizeBytes.Length, 0);
 
-            socketFd.Send(pathBytes, pathBytes.Length, 0);
+                socketFd.Send(pathBytes, pathBytes.Length, 0);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Exception:\t\n" + exc.Message);
+                var window = (ProjectZip)Application.OpenForms[0];
+                window.SetControls(true);
+            }
 
             //send File size
             var file = File.ReadAllBytes(path);
 
             var fileSizeBytes = BitConverter.GetBytes(file.Length);
 
-            socketFd.Send(fileSizeBytes, fileSizeBytes.Length, 0);
+            try
+            {
+                socketFd.Send(fileSizeBytes, fileSizeBytes.Length, 0);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Exception:\t\n" + exc.Message);
+                var window = (ProjectZip)Application.OpenForms[0];
+                window.SetControls(true);
+            }
 
             //send File
             var fas = new FileAndSize
@@ -48,24 +67,33 @@ namespace project_ZIP.client
 
         private static void SendFileCallback(IAsyncResult ar)
         {
-            var fileAndSize = (FileAndSize) ar.AsyncState;
-
-            var socketFd = fileAndSize.SocketFd;
-
-            var handle = fileAndSize.Handle;
-
-            var bytesSent = socketFd.EndSend(ar);
-
-            fileAndSize.SizeRemaining -= bytesSent;
-
-            if (fileAndSize.SizeRemaining > 0)
+            try
             {
-                socketFd.BeginSend(fileAndSize.File, (fileAndSize.FileSize - fileAndSize.SizeRemaining),
-                    (fileAndSize.SizeRemaining > FileAndSize.BUF_SIZE ? FileAndSize.BUF_SIZE : fileAndSize.SizeRemaining), 0, SendFileCallback, fileAndSize);
+                var fileAndSize = (FileAndSize)ar.AsyncState;
+
+                var socketFd = fileAndSize.SocketFd;
+
+                var handle = fileAndSize.Handle;
+
+                var bytesSent = socketFd.EndSend(ar);
+
+                fileAndSize.SizeRemaining -= bytesSent;
+
+                if (fileAndSize.SizeRemaining > 0)
+                {
+                    socketFd.BeginSend(fileAndSize.File, (fileAndSize.FileSize - fileAndSize.SizeRemaining),
+                        (fileAndSize.SizeRemaining > FileAndSize.BUF_SIZE ? FileAndSize.BUF_SIZE : fileAndSize.SizeRemaining), 0, SendFileCallback, fileAndSize);
+                }
+                else
+                {
+                    handle.Set();
+                }
             }
-            else
+            catch (Exception exc)
             {
-                handle.Set();
+                MessageBox.Show("Exception:\t\n" + exc.Message);
+                var window = (ProjectZip)Application.OpenForms[0];
+                window.SetControls(true);
             }
         }
     }

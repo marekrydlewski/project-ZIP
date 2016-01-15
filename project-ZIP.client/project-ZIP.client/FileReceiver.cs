@@ -16,7 +16,18 @@ namespace project_ZIP.client
         {
             //receive File size
             var sizeBytes = new byte[sizeof(int)];
-            socketFd.Receive(sizeBytes, sizeBytes.Length, 0);
+
+            try
+            {
+                socketFd.Receive(sizeBytes, sizeBytes.Length, 0);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show("Exception:\t\n" + exc.Message);
+                var window = (ProjectZip)Application.OpenForms[0];
+                window.SetControls(true);
+            }
+
             var size = BitConverter.ToInt32(sizeBytes, 0);
 
             //receive File
@@ -33,31 +44,40 @@ namespace project_ZIP.client
 
         private static void FileReceiveCallback(IAsyncResult ar)
         {
-            var fileAndSize = (FileAndSize) ar.AsyncState;
-            var socketFd = fileAndSize.SocketFd;
-
-            var bytesReceived = fileAndSize.SocketFd.EndReceive(ar);
-
-            fileAndSize.SizeRemaining -= bytesReceived;
-
-            fileAndSize.File = Combine(fileAndSize.File, fileAndSize.Buffer);
-
-            if (fileAndSize.SizeRemaining > 0)
+            try
             {
-                socketFd.BeginReceive(fileAndSize.Buffer, 0, FileAndSize.BUF_SIZE, 0,
-                    FileReceiveCallback, fileAndSize);
+                var fileAndSize = (FileAndSize)ar.AsyncState;
+                var socketFd = fileAndSize.SocketFd;
+
+                var bytesReceived = fileAndSize.SocketFd.EndReceive(ar);
+
+                fileAndSize.SizeRemaining -= bytesReceived;
+
+                fileAndSize.File = Combine(fileAndSize.File, fileAndSize.Buffer);
+
+                if (fileAndSize.SizeRemaining > 0)
+                {
+                    socketFd.BeginReceive(fileAndSize.Buffer, 0, FileAndSize.BUF_SIZE, 0,
+                        FileReceiveCallback, fileAndSize);
+                }
+                else
+                {
+                    var window = (ProjectZip)Application.OpenForms[0];
+                    window.SetControls(true);
+                    window.SetFileSelectTextBox("");
+
+                    //send file back to form
+                    window.DownloadFile(fileAndSize.File);
+
+                    socketFd.Shutdown(SocketShutdown.Both);
+                    socketFd.Close();
+                }
             }
-            else
+            catch (Exception exc)
             {
-                var window = (ProjectZip) Application.OpenForms[0];
+                MessageBox.Show("Exception:\t\n" + exc.Message);
+                var window = (ProjectZip)Application.OpenForms[0];
                 window.SetControls(true);
-                window.SetFileSelectTextBox("");
-
-                //send file back to form
-                window.DownloadFile(fileAndSize.File);
-
-                socketFd.Shutdown(SocketShutdown.Both);
-                socketFd.Close();
             }
         }
 

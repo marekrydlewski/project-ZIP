@@ -45,6 +45,8 @@ namespace project_ZIP.client
             catch (Exception exc)
             {
                 MessageBox.Show("Exception:\t\n" + exc.Message);
+                var window = (ProjectZip) Application.OpenForms[0];
+                window.SetControls(true);
             }
         }
 
@@ -58,20 +60,22 @@ namespace project_ZIP.client
                 /* complete the connection */
                 socketFd.EndConnect(ar);
 
-                var window = (ProjectZip)Application.OpenForms[0];
-                window.SetControls(false);
-
                 //handle for threads control
                 var sendHandle = new ManualResetEvent(false);
 
                 //send directory, wait for finished sending, then receive compressed file
+                var window = (ProjectZip) Application.OpenForms[0];
                 DirectorySender.SendDirectory(window.FileSelectTextBoxText(), socketFd, sendHandle);
+
                 sendHandle.WaitOne();
+
                 FileReceiver.FileReceive(socketFd);
             }
             catch (Exception exc)
             {
                 MessageBox.Show("Exception:\t\n" + exc.Message);
+                var window = (ProjectZip)Application.OpenForms[0];
+                window.SetControls(true);
             }
         }
     }
