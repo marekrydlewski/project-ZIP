@@ -39,3 +39,6 @@ project-ZIP.server/server
 
 #~
 *~
+
+#CLion config
+project-ZIP.server/.idea
