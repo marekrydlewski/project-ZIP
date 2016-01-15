@@ -41,4 +41,4 @@ project-ZIP.server/server
 *~
 
 #CLion config
-project-ZIP.server/.idea
+project-ZIP.server/.idea/*
