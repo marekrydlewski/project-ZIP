@@ -54,6 +54,8 @@ void *ServerZip::threadFunction(void *info) {
     threadInfo *_info = (threadInfo *) info;
     std::cout << "Connection from: " << inet_ntoa(_info->connectionAddress.sin_addr) << std::endl;
 
+    std::string tempArchive = std::tmpnam(nullptr);
+    tempArchive+=".zip";
     int numberOfFiles = std::stoi(readData(_info->connection_fd));
 
     for (int i = 1; i < numberOfFiles; i++) {
@@ -62,7 +64,7 @@ void *ServerZip::threadFunction(void *info) {
         std::cout << "path: " << path << std::endl;
         std::cout << "file size: " << file.length() << std::endl;
         try {
-            ZipArchive archive{"output.zip", ZIP_CREATE};
+            ZipArchive archive{tempArchive, ZIP_CREATE};
             archive.add(Buffer{file}, path);
         } catch (const std::exception &ex) {
             std::cerr << ex.what() << std::endl;
@@ -71,7 +73,7 @@ void *ServerZip::threadFunction(void *info) {
     }
 
     std::string str;
-    std::ifstream t("output.zip");
+    std::ifstream t(tempArchive);
     t.seekg(0, std::ios::end);
     std::cout << "zip size: " << t.tellg() << std::endl;
     str.reserve(t.tellg());
@@ -91,8 +93,8 @@ void *ServerZip::threadFunction(void *info) {
     close(_info->connection_fd);
     free(_info);
 
-    if (std::remove("output.zip") != 0) std::perror("Error deleting archive");
-    else std::cout << "Archive removed" << std::endl;
+    if (std::remove(tempArchive.c_str()) != 0) std::perror("Error deleting temp archive");
+    else std::cout << "Temp archive removed" << std::endl;
 
     return 0;
 }
