@@ -35,14 +35,13 @@ private:
 
     ServerZip(){
         backlog = 5;
-    };  // Private so that it can  not be called
+    };  // private so that it can  not be called
     ServerZip(ServerZip const&){};             // copy constructor is private
-    //ServerZip & operator=(ServerZip const&){};  // assignment operator is private
     static ServerZip * m_pInstance;
     static void readXBytes(int socket, unsigned int x, void* buffer);
     static std::string readData(int socket_fd);
     static void writeXBytes(int socket, unsigned int x, void* buffer);
-    static void writeData(int socket_fd, unsigned int x, void *buffer);
+    static void writeData(int socket_fd, int x, void *buffer);
 };
 
 
