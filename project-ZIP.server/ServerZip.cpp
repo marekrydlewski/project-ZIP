@@ -86,8 +86,6 @@ void *ServerZip::threadFunction(void *info) {
     int length = (int) str.length();
     buffer = new char[length];
     std::copy(str.begin(), str.end(), buffer);
-    writeData(_info->connection_fd, sizeof(length), (void *) (&length));
-    writeData(_info->connection_fd, (unsigned int) length, (void *) buffer);
     writeData(_info->connection_fd, (unsigned int) length, (void *) buffer);
 
     write(1, "Ending connection\n", 18);
