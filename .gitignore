@@ -33,3 +33,9 @@
 # Folders
 bin/
 obj/
+
+#exe
+project-ZIP.server/server
+
+#~
+*~

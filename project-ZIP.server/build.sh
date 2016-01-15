@@ -1,3 +1,12 @@
 #!/bin/bash
+
 cd ${0%/*}
-g++ -std=c++11 ./project-ZIP.server.cpp -pthread -o ./server -Wall
+if test "$1" == "debug"
+then
+    g++ -std=c++14 ./ServerZip.cpp ./ZipArchive.cpp ./project-ZIP.server.cpp -I/usr/local/lib/libzip/include -lzip -pthread -o ./server -Wall -g
+    gdb ./server
+else
+    g++ -std=c++14 ./ServerZip.cpp ./ZipArchive.cpp ./project-ZIP.server.cpp -I/usr/local/lib/libzip/include -lzip -pthread -o ./server -Wall
+    ./server
+fi
+
