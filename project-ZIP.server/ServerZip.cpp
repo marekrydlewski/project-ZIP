@@ -32,7 +32,7 @@ void ServerZip::connect() {
     setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on));
     sockaddr_in socketAddress = this->fillAddress(1234);
 
-    bind(socket_fd, (sockaddr*) &socketAddress, sizeof(socketAddress));
+    bind(socket_fd, (sockaddr * ) & socketAddress, sizeof(socketAddress));
 
     listen(socket_fd, backlog);
 
@@ -42,7 +42,7 @@ void ServerZip::connect() {
         auto *info = new threadInfo();
 
         socklen_t socketAddressSize = sizeof(info->connectionAddress);
-        info->connection_fd = accept(socket_fd, (sockaddr*) &info->connectionAddress, &socketAddressSize);
+        info->connection_fd = accept(socket_fd, (sockaddr * ) & info->connectionAddress, &socketAddressSize);
 
         pthread_create(&threadId, NULL, threadFunction, info);
         pthread_detach(threadId);
@@ -55,10 +55,11 @@ void *ServerZip::threadFunction(void *info) {
     std::cout << "Connection from: " << inet_ntoa(_info->connectionAddress.sin_addr) << std::endl;
 
     std::string tempArchive = std::tmpnam(nullptr);
-    tempArchive+=".zip";
+    tempArchive += ".zip";
     int numberOfFiles = std::stoi(readData(_info->connection_fd));
 
-    for (int i = 1; i < numberOfFiles; i++) {
+
+    for (int i = 0; i < numberOfFiles; i++) {
         auto path = readData(_info->connection_fd);
         auto file = readData(_info->connection_fd);
         std::cout << "path: " << path << std::endl;
