@@ -41,5 +41,5 @@ project-ZIP.server/server
 *~
 
 #CLion config
-project-ZIP.server/.idea/workspace.xml
-project-ZIP.server/.idea/tasks.xml
+/project-ZIP.server/.idea/workspace.xml
+/project-ZIP.server/.idea/tasks.xml
