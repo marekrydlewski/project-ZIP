@@ -69,6 +69,7 @@ namespace project_ZIP.client
         {
             if (IPTextBox.Text.Length > 0 && FileSelectTextBox.Text.Length > 0)
             {
+                SetControls(false);
                 if (Regex.Match(IPTextBox.Text, @"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}").Success)
                 {
                     ConnectionManager.SimpleConnect(IPTextBox.Text, PORT_NO);
