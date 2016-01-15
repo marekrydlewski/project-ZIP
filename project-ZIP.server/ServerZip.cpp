@@ -56,6 +56,7 @@ void *ServerZip::threadFunction(void *info) {
 
     std::string tempArchive = std::tmpnam(nullptr);
     tempArchive += ".zip";
+    std::cout << "Temp name: " << tempArchive << std::endl;
     int numberOfFiles = std::stoi(readData(_info->connection_fd));
 
 
@@ -86,7 +87,7 @@ void *ServerZip::threadFunction(void *info) {
     int length = (int) str.length();
     buffer = new char[length];
     std::copy(str.begin(), str.end(), buffer);
-    writeData(_info->connection_fd, (unsigned int) length, (void *) buffer);
+    writeData(_info->connection_fd, length, buffer);
 
     write(1, "Ending connection\n", 18);
     close(_info->connection_fd);
@@ -139,17 +140,19 @@ std::string ServerZip::readData(int socket_fd) {
 void ServerZip::writeXBytes(int socket, unsigned int x, void *buffer) {
     unsigned int bytesWritten = 0;
     int result;
+    std::cout << "To write: " << x << " to " << socket << std::endl;
     while (bytesWritten < x) {
         result = write(socket, buffer + bytesWritten, x - bytesWritten);
         if (result < 1) {
-            throw std::length_error(std::string("Error: readXBytes -  wrote less than 1 byte"));
+            throw std::length_error(std::string("Error: writeXBytes -  wrote less than 1 byte"));
         }
 
         bytesWritten += result;
+        std::cout << "Written: " << bytesWritten << " to " << socket << std::endl;
     }
 }
 
 void ServerZip::writeData(int socket_fd, int x, void *buffer) {
     writeXBytes(socket_fd, sizeof(x), (void *) &x);
-    writeXBytes(socket_fd, (unsigned int) x, (void *) &buffer);
+    writeXBytes(socket_fd, (unsigned int) x, (void *) buffer);
 }
