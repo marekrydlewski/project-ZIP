@@ -112,7 +112,7 @@ void ServerZip::readXBytes(int socket, unsigned int x, void *buffer) {
     while (bytesRead < x) {
         result = read(socket, buffer + bytesRead, x - bytesRead);
         if (result < 1) {
-            throw std::length_error(std::string("Error: readXBytes -  read less than 1 byte"));
+            throw std::length_error(std::string("readXBytes -  read less than 1 byte"));
         }
         bytesRead += result;
     }
@@ -140,7 +140,7 @@ void ServerZip::writeXBytes(int socket, unsigned int x, void *buffer) {
     while (bytesWritten < x) {
         result = write(socket, buffer + bytesWritten, x - bytesWritten);
         if (result < 1) {
-            throw std::length_error(std::string("Error: writeXBytes -  wrote less than 1 byte"));
+            throw std::length_error(std::string("writeXBytes -  wrote less than 1 byte"));
         }
 
         bytesWritten += result;
