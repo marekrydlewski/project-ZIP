@@ -90,7 +90,7 @@ void *ServerZip::threadFunction(void *info) {
 	close(_info->connection_fd);
 	free(_info);
 
-	if (std::remove(tempArchive.c_str()) != 0) std::cerr << < "Error deleting temp archive" << endl;
+	if (std::remove(tempArchive.c_str()) != 0) std::cerr << "Error deleting temp archive" << std::endl;
 	else std::cout << "Temp archive removed" << std::endl;
 
 	return 0;

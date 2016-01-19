@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
         server->connect();
     }
     catch (const std::exception& e) {
-        std::cerror<<"Error: "<<e.what()<<endl;
+        std::cerr<<"Error: "<<e.what()<<std::endl;
     }
 
 }
