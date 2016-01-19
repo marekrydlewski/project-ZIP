@@ -8,6 +8,11 @@ int main(int argc, char **argv) {
 
 	ServerZip* server;
 	server = ServerZip::getInstance();
-    server->connect();
+    try {
+        server->connect();
+    }
+    catch (const std::exception& e) {
+        std::cerr<<"Error: "<<e.what()<<std::endl;
+    }
 
 }
